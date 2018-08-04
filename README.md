@@ -1,2 +1,3 @@
-# lab-cobol
-Repo pra guardar as coisas do laboratorio de cobol
+# Laboratório de COBOL
+Repositório para guardar os scripts de cobol.
+Tenho que ver um bom editor para esses caras.
