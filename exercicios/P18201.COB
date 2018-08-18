@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. P18201.COB.
+       PROGRAM-ID. P18201.COB
        AUTHOR. RICARDO DE LUCAS DO NASCIMENTO.
       **************************************
       * MANUTENCAO DO CADASTRO DE AMIGOS  * TODO: CHANGE THIS LATER
@@ -66,19 +66,21 @@
                 DISPLAY (01, 20) "CADASTRO DE AMIGOS"
                 DISPLAY (03, 01) "APELIDO: "
                 DISPLAY (04, 01) "NOME   : "
-                DISPLAY (05, 01) "EMAIL  : "
-       INC-002.
-                ACCEPT  (04, 21) APELIDO
+                DISPLAY (05, 01) "EMAIL  : ".
+      
+      * Le o apelido do amigo
+       READAP.
+                ACCEPT  (03, 09) APELIDO
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02
                    CLOSE AMIGOS
                    GO TO ROT-FIM.
            
       * NOTE: Talvez a linha de baixo quebre             
-                IF APELIDO = ""
+                IF APELIDO = SPACES
                    MOVE "*** APELIDO INVALIDO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-002.
+                   GO TO READAP.
        LER-AMIGOS01.
                 MOVE 0 TO W-SEL
                 READ AMIGOS
@@ -98,32 +100,25 @@
                 ELSE
                    NEXT SENTENCE.
       * "Rotinas" de leitura das variaveis
-
-      * Le o apelido do amigo
-       INC-001.
-                ACCEPT (03, 9) APELIDO
-                ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-002.
       
       * Le o nome do amigo
-       INC-002.
-                ACCEPT (05, 9) NOME
+       READNAME.
+                ACCEPT (04, 9) NOME
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-003.
+                IF W-ACT = 02 GO TO READEMAIL.
       
       * Le o email do amigo
-       INC-003.
+       READEMAIL.
                 ACCEPT (05, 9) EMAIL
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO INC-OPC.
 
-      * NOTE: This may break
        INC-OPC.
                 MOVE "S" TO W-OPCAO
                 DISPLAY (23, 40) "DADOS OK (S/N) : ".
                 ACCEPT (23, 57) W-OPCAO WITH UPDATE
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-005.
+                IF W-ACT = 02 GO TO INC-001.
                 IF W-OPCAO = "N" OR "n"
                    MOVE "*** DADOS RECUSADOS PELO OPERADOR ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
@@ -167,7 +162,7 @@
                    MOVE 02 TO W-SEL
                    GO TO INC-001.
                 IF W-ACT = 03
-                   GO TO INC-003.
+                   GO TO READNAME.
       *
        EXC-OPC.
                 DISPLAY (23, 40) "EXCLUIR   (S/N) : ".
@@ -194,7 +189,7 @@
                 DISPLAY (23, 40) "ALTERAR  (S/N) : ".
                 ACCEPT (23, 57) W-OPCAO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-005.
+                IF W-ACT = 02 GO TO INC-001.
                 IF W-OPCAO = "N" OR "n"
                    MOVE "*** INFORMACOES NAO ALTERADAS *** " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
@@ -236,7 +231,7 @@
                DISPLAY (23, 12) MENS.
        ROT-MENS2.
                 ADD 1 TO W-CONT
-                IF W-CONT < 30000
+                IF W-CONT < 1500
                    GO TO ROT-MENS2
                 ELSE
                    DISPLAY (23, 12) LIMPA.
