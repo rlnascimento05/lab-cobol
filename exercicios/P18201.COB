@@ -1,8 +1,8 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. P18201.COB
+       PROGRAM-ID. P18201
        AUTHOR. RICARDO DE LUCAS DO NASCIMENTO.
       **************************************
-      * MANUTENCAO DO CADASTRO DE AMIGOS  * TODO: CHANGE THIS LATER
+      * CADASTRO DE AMIGOS  * TODO: CHANGE THIS LATER
       **************************************
       *----------------------------------------------------------------
        ENVIRONMENT DIVISION.
@@ -75,12 +75,11 @@
                 IF W-ACT = 02
                    CLOSE AMIGOS
                    GO TO ROT-FIM.
-           
-      * NOTE: Talvez a linha de baixo quebre             
                 IF APELIDO = SPACES
                    MOVE "*** APELIDO INVALIDO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO READAP.
+
        LER-AMIGOS01.
                 MOVE 0 TO W-SEL
                 READ AMIGOS
@@ -95,6 +94,8 @@
                       GO TO ACE-001
                    ELSE
                       MOVE "ERRO NA LEITURA ARQUIVO AMIGOS"   TO MENS
+                      PERFORM ROT-MENS THRU ROT-MENS-FIM
+                      MOVE ST-ERRO   TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
                 ELSE
@@ -127,7 +128,7 @@
                    MOVE "*** DIGITE APENAS S=SIM e N=NAO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO INC-OPC.
-      * Rotina de Escrita
+      * Rotina de Escrita no "banco de dados"
        WRITE-REG.
                 WRITE REGAMIGO
                 IF ST-ERRO = "00" OR "02"
@@ -159,11 +160,13 @@
                 MOVE SPACES TO MENS
                 DISPLAY (23, 12) MENS
                 IF W-ACT = 02
-                   MOVE 02 TO W-SEL
                    GO TO INC-001.
+      * W-ACT = 03 -> O usuário teclou F2 
                 IF W-ACT = 03
-                   GO TO READNAME.
-      *
+                   MOVE 02 TO W-SEL
+                   PERFORM READNAME THRU READEMAIL
+                   GO TO ALT-OPC.
+       
        EXC-OPC.
                 DISPLAY (23, 40) "EXCLUIR   (S/N) : ".
                 ACCEPT (23, 57) W-OPCAO
