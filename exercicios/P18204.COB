@@ -141,7 +141,12 @@
                 ELSE
                     NEXT SENTENCE.
        INC-001.
+<<<<<<< Updated upstream
                 MOVE SPACES TO APELIDO NOME EMAIL.
+=======
+                MOVE ZEROS TO AMIGO-DDD AMIGO-NUMTEL DATANASC
+                MOVE SPACES TO AMIGO-APELIDO AMIGO-NOME AMIGO-EMAIL.
+>>>>>>> Stashed changes
                 DISPLAY (01, 01) ERASE.
                 DISPLAY (01, 20) "CADASTRO DE AMIGOS"
                 DISPLAY (03, 01) "APELIDO: "
@@ -150,14 +155,22 @@
       
       * Le o apelido do amigo
        READAP.
+<<<<<<< Updated upstream
                 ACCEPT  (03, 09) APELIDO
+=======
+                ACCEPT  TAPELIDO
+>>>>>>> Stashed changes
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02
                    CLOSE AMIGOS
                    GO TO ROT-FIM.
            
+<<<<<<< Updated upstream
       * NOTE: Talvez a linha de baixo quebre             
                 IF APELIDO = SPACES
+=======
+                IF AMIGO-APELIDO = SPACES
+>>>>>>> Stashed changes
                    MOVE "*** APELIDO INVALIDO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO READAP.
@@ -166,9 +179,13 @@
                 READ AMIGOS
                 IF ST-ERRO NOT = "23"
                    IF ST-ERRO = "00"
+<<<<<<< Updated upstream
                       DISPLAY (03, 9) APELIDO
                       DISPLAY (04, 9) NOME
                       DISPLAY (05, 9) EMAIL
+=======
+                      DISPLAY TELAAMIGO
+>>>>>>> Stashed changes
                       MOVE "*** AMIGO JA CADASTRAD0 ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       MOVE 1 TO W-SEL

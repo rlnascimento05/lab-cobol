@@ -1,11 +1,11 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CEP001.
+       PROGRAM-ID. CEP001A.
        AUTHOR. ANGELO.
       **************************************
       * MANUTENCAO DO CADASTRO DE PRODUTO  *
       **************************************
       *----------------------------------------------------------------
-       ENVIRONMENT DIVISION.
+       ENVIRONMENT DIVISION. 
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
                          DECIMAL-POINT IS COMMA.
@@ -52,93 +52,93 @@
            05  LINE 01  COLUMN 41
                VALUE  "ддддддддддддддддддддддддддддддддддддддд©".
            05  LINE 02  COLUMN 01
-               VALUE  "Ё                           CADASTRO DE".
+               VALUE  "?                          CADASTRO DE".
            05  LINE 02  COLUMN 41
-               VALUE  "PRODUTO                                Ё".
+               VALUE  "PRODUTO                                ?.
            05  LINE 03  COLUMN 01
-               VALUE  "цддддддддддддддддддддддддддддддддддддддд".
+               VALUE  "цддддддддддддддддддд 	дддддддддддддддддддд".
            05  LINE 03  COLUMN 41
                VALUE  "ддддддддддддддддддддддддддддддддддддддд╢".
            05  LINE 04  COLUMN 01
-               VALUE  "Ё".
+               VALUE  "?.
            05  LINE 04  COLUMN 41
-               VALUE  "                                       Ё".
+               VALUE  "                                       ?.
            05  LINE 05  COLUMN 01
-               VALUE  "Ё       зддддддддддддддддд©".
+               VALUE  "?      зддддддддддддддддд?.
            05  LINE 05  COLUMN 41
-               VALUE  "                                       Ё".
+               VALUE  "                                       ?.
            05  LINE 06  COLUMN 01
-               VALUE  "Ё       Ё CODIGO          Ё".
+               VALUE  "?      ?CODIGO          ?.
            05  LINE 06  COLUMN 41
-               VALUE  "                                       Ё".
+               VALUE  "                                       ?.
            05  LINE 07  COLUMN 01
-               VALUE  "Ё       юддддддддддддддддды".
+               VALUE  "?      юддддддддддддддддд?.
            05  LINE 07  COLUMN 41
-               VALUE  "                                       Ё".
+               VALUE  "                                       ?.
            05  LINE 08  COLUMN 01
-               VALUE  "Ё       зддддддддддддддддддддддддддддддд".
+               VALUE  "?      зддддддддддддддддддддддддддддддд".
            05  LINE 08  COLUMN 41
-               VALUE  "дддддддддддд©                          Ё".
+               VALUE  "дддддддддддд?                         ?.
            05  LINE 09  COLUMN 01
-               VALUE  "Ё       Ё DESCRICAO".
+               VALUE  "?      ?DESCRICAO".
            05  LINE 09  COLUMN 41
-               VALUE  "            Ё                          Ё".
+               VALUE  "            ?                         ?.
            05  LINE 10  COLUMN 01
-               VALUE  "Ё       юддддддддддддддддддддддддддддддд".
+               VALUE  "?      юддддддддддддддддддддддддддддддд".
            05  LINE 10  COLUMN 41
-               VALUE  "дддддддддддды                          Ё".
+               VALUE  "дддддддддддд?                         ?.
            05  LINE 11  COLUMN 01
-               VALUE  "Ё      здддддддддддддддд©".
+               VALUE  "?     здддддддддддддддд©".
            05  LINE 11  COLUMN 41
-               VALUE  "                                       Ё".
+               VALUE  "                                       ?.
            05  LINE 12  COLUMN 01
-               VALUE  "Ё      Ё  UNIDADE       Ё".
+               VALUE  "?     ? UNIDADE       ?.
            05  LINE 12  COLUMN 41
-               VALUE  "                                       Ё".
+               VALUE  "                                       ?.
            05  LINE 13  COLUMN 01
-               VALUE  "Ё      юдддддддддддддддды".
+               VALUE  "?     юдддддддддддддддды".
            05  LINE 13  COLUMN 41
-               VALUE  "                                       Ё".
+               VALUE  "                                       ?.
            05  LINE 14  COLUMN 01
                VALUE  "Ёздддддддддддддддддддбдддддддддддддддддд".
            05  LINE 14  COLUMN 41
-               VALUE  "ддддддбдддддддддддддддддддддддддддддд© Ё".
+               VALUE  "ддддддбдддддддддддддддддддддддддддддд© ?.
            05  LINE 15  COLUMN 01
-               VALUE  "ЁЁQUANTIDADE         Ё PRECO MEDIO".
+               VALUE  "ЁЁQUANTIDADE         ?PRECO MEDIO".
            05  LINE 15  COLUMN 41
-               VALUE  "      Ё VALOR ESTOQUE                Ё Ё".
+               VALUE  "      ?VALOR ESTOQUE                ??.
            05  LINE 16  COLUMN 01
                VALUE  "Ёюдддддддддддддддддддадддддддддддддддддд".
            05  LINE 16  COLUMN 41
-               VALUE  "ддддддадддддддддддддддддддддддддддддды Ё".
+               VALUE  "ддддддадддддддддддддддддддддддддддддды ?.
            05  LINE 17  COLUMN 01
-               VALUE  "Ё       зддддддддддддддддддддддддддддддд".
+               VALUE  "?      зддддддддддддддддддддддддддддддд".
            05  LINE 17  COLUMN 41
-               VALUE  "ддддддддддддд©                         Ё".
+               VALUE  "ддддддддддддд©                         ?.
            05  LINE 18  COLUMN 01
-               VALUE  "Ё       Ё FUNCIONARIO".
+               VALUE  "?      ?FUNCIONARIO".
            05  LINE 18  COLUMN 41
-               VALUE  "             Ё                         Ё".
+               VALUE  "             ?                        ?.
            05  LINE 19  COLUMN 01
-               VALUE  "Ё       юддддддддддддддддддддддддддддддд".
+               VALUE  "?      юддддддддддддддддддддддддддддддд".
            05  LINE 19  COLUMN 41
-               VALUE  "ддддддддддддды                         Ё".
+               VALUE  "ддддддддддддды                         ?.
            05  LINE 20  COLUMN 01
-               VALUE  "Ё".
+               VALUE  "?.
            05  LINE 20  COLUMN 41
-               VALUE  "                                       Ё".
+               VALUE  "                                       ?.
            05  LINE 21  COLUMN 01
-               VALUE  "Ё".
+               VALUE  "?.
            05  LINE 21  COLUMN 41
-               VALUE  "                                       Ё".
+               VALUE  "                                       ?.
            05  LINE 22  COLUMN 01
-               VALUE  "Ё".
+               VALUE  "?.
            05  LINE 22  COLUMN 41
-               VALUE  "                                       Ё".
+               VALUE  "                                       ?.
            05  LINE 23  COLUMN 01
-               VALUE  "ЁMENSAGEM :".
+               VALUE  "?ENSAGEM :".
            05  LINE 23  COLUMN 41
-               VALUE  "                                       Ё".
+               VALUE  "                                       ?.
            05  LINE 24  COLUMN 01
                VALUE  "юддддддддддддддддддддддддддддддддддддддд".
            05  LINE 24  COLUMN 41
@@ -181,7 +181,7 @@
                IF ST-ERRO = "30"
                       OPEN OUTPUT PRODUTO
                       CLOSE PRODUTO
-                      MOVE "*** ARQUIVO PRODUTO SENDO CRIADO **" TO MENS
+                      MOVE "*** ARQUIVO PRODUTO SENDO CRIADO ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO INC-OP0
                    ELSE
