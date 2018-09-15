@@ -11,31 +11,28 @@
                          DECIMAL-POINT IS COMMA.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-       SELECT AMIGOS ASSIGN TO DISK
+       SELECT NOTAS ASSIGN TO DISK
                     ORGANIZATION IS INDEXED
                     ACCESS MODE  IS DYNAMIC
-                    RECORD KEY   IS AMIGO-APELIDO
+                    RECORD KEY   IS RA
                     FILE STATUS  IS ST-ERRO
-                    ALTERNATE RECORD KEY IS AMIGO-NOME
-                                            WITH DUPLICATES.
       *
       *-----------------------------------------------------------------
        DATA DIVISION.
        FILE SECTION.
-       FD AMIGOS
+       FD NOTAS
                LABEL RECORD IS STANDARD
-               VALUE OF FILE-ID IS "CADAMIGO.DAT".
-       01 REGAMIGO.
-                03 AMIGO-APELIDO   PIC X(13).
-                03 AMIGO-NOME      PIC X(32).
-                03 AMIGO-EMAIL     PIC X(32).
-                03 AMIGO-TELEFONE. 
-                   05 AMIGO-DDD    PIC 9(02).
-                   05 AMIGO-NUMTEL PIC 9(09).
-                03 AMIGO-DATANASC.
-                   05 AMIGO-DIA    PIC 9(02).
-                   05 AMIGO-MES    PIC 9(02).
-                   05 AMIGO-ANO    PIC 9(04).
+               VALUE OF FILE-ID IS "CADNOTAS.DAT".
+       01 REGNOTAS.
+                03 RA                   PIC X(13).
+                03 NOME                 PIC X(32).
+                03 NOTA1                PIC 9(02)V9.
+                03 NOTA2                PIC 9(02)V9.
+                03 MEDIA                PIC 9(02)V9.
+                03 FALTA1               PIC 9(02).
+                03 FALTA2               PIC 9(02).
+                03 TOTAL-FALTAS         PIC 9(02).
+                03 SITUACAO             PIC 9(01).
       *
       *-----------------------------------------------------------------
        WORKING-STORAGE SECTION.
@@ -51,152 +48,76 @@
        77 MENS         PIC X(50) VALUE SPACES.
        77 LIMPA        PIC X(50) VALUE SPACES.
       *-----------------------------------------------------------------
-       SCREEN SECTION.
-
-       01  TELAAMIGO.
-           05  LINE 02  COLUMN 01
-               VALUE  "                      CADASTRO DE AMIGOS".
-           05  LINE 03  COLUMN 01
-               VALUE  "  旼컴컴컴컴컴컴컴쩡컴컴컴컴컴컴컴컴컴컴".
-           05  LINE 03  COLUMN 41
-               VALUE  "컴컴컴컴컴컴컴?.
-           05  LINE 04  COLUMN 01
-               VALUE  "  ?PELIDO        ?".
-           05  LINE 04  COLUMN 41
-               VALUE  "              ?.
-           05  LINE 05  COLUMN 01
-               VALUE  "  ?              ?.
-           05  LINE 05  COLUMN 41
-               VALUE  "              ?.
-           05  LINE 06  COLUMN 01
-               VALUE  "  ?OME           ?".
-           05  LINE 06  COLUMN 41
-               VALUE  "              ?.
-           05  LINE 07  COLUMN 01
-               VALUE  "  ?              ?.
-           05  LINE 07  COLUMN 41
-               VALUE  "              ?.
-           05  LINE 08  COLUMN 01
-               VALUE  "  ?MAIL          ?".
-           05  LINE 08  COLUMN 41
-               VALUE  "              ?.
-           05  LINE 09  COLUMN 01
-               VALUE  "  ?              ?.
-           05  LINE 09  COLUMN 41
-               VALUE  "              ?.
-           05  LINE 10  COLUMN 01
-               VALUE  "  ?ELEFONE       ? (  )".
-           05  LINE 10  COLUMN 41
-               VALUE  "              ?.
-           05  LINE 11  COLUMN 01
-               VALUE  "  ?              ?.
-           05  LINE 11  COLUMN 41
-               VALUE  "              ?.
-           05  LINE 12  COLUMN 01
-               VALUE  "  ?ATA NASCIMENTO?".
-           05  LINE 12  COLUMN 41
-               VALUE  "              ?.
-           05  LINE 13  COLUMN 01
-               VALUE  "  읕컴컴컴컴컴컴컴좔컴컴컴컴컴컴컴컴컴컴".
-           05  LINE 13  COLUMN 41
-               VALUE  "컴컴컴컴컴컴컴?.
-           05  LINE 23  COLUMN 01
-               VALUE  "    MENSAGEM :".
-           05  TAPELIDO
-               LINE 04  COLUMN 22  PIC X(13)
-               USING  AMIGO-APELIDO.
-           05  TNOME
-               LINE 06  COLUMN 22  PIC X(32)
-               USING  AMIGO-NOME.
-           05  TEMAIL
-               LINE 08  COLUMN 22  PIC X(32)
-               USING  AMIGO-EMAIL.
-           05  TDDD
-               LINE 10  COLUMN 23  PIC 9(02)
-               USING  AMIGO-DDD.
-           05  TTELEFONE
-               LINE 10  COLUMN 27  PIC Z9999.9999
-               USING  AMIGO-NUMTEL.
-           05  TDATANASC
-               LINE 12  COLUMN 22  PIC XX/XX/XXXX
-               USING  AMIGO-DATA-NASC.
-       
-      *-----------------------------------------------------------------
-       PROCEDURE DIVISION.
-       INICIO.
       *
        INC-OP0.
-           OPEN I-O AMIGOS
+           OPEN I-O NOTAS
            IF ST-ERRO NOT = "00"
                IF ST-ERRO = "30"
-                      OPEN OUTPUT AMIGOS
-                      CLOSE AMIGOS
-                      MOVE "*** ARQUIVO AMIGOS SENDO CRIADO **" TO MENS
+                      OPEN OUTPUT NOTAS
+                      CLOSE NOTAS
+                      MOVE "*** ARQUIVO NOTAS SENDO CRIADO **" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO INC-OP0
                    ELSE
-                      MOVE "ERRO NA ABERTURA DO ARQUIVO AMIGOS" TO MENS
+                      MOVE "ERRO NA ABERTURA DO ARQUIVO NOTAS" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
                 ELSE
                     NEXT SENTENCE.
        INC-001.
-<<<<<<< Updated upstream
-                MOVE SPACES TO APELIDO NOME EMAIL.
-=======
-                MOVE ZEROS TO AMIGO-DDD AMIGO-NUMTEL DATANASC
-                MOVE SPACES TO AMIGO-APELIDO AMIGO-NOME AMIGO-EMAIL.
->>>>>>> Stashed changes
+                MOVE ZEROS TO NOTA1 NOTA2 MEDIA 
+                MOVE ZEROS TO FALTA1 FALTA2 TOTAL-FALTAS
+                MOVE SPACES TO RA NOME SITUACAO.
                 DISPLAY (01, 01) ERASE.
-                DISPLAY (01, 20) "CADASTRO DE AMIGOS"
-                DISPLAY (03, 01) "APELIDO: "
-                DISPLAY (04, 01) "NOME   : "
-                DISPLAY (05, 01) "EMAIL  : ".
+                DISPLAY (01, 20) "CADASTRO DE NOTAS"
+                DISPLAY (03, 01) "RA                    : "
+                DISPLAY (04, 01) "NOME                  : "
+                DISPLAY (05, 01) "NOTA1                 : "
+                DISPLAY (06, 01) "NOTA2                 : "
+                DISPLAY (07, 01) "MEDIA                 : "
+                DISPLAY (08, 01) "FALTA1                : "
+                DISPLAY (09, 01) "FALTA2                : "
+                DISPLAY (10, 01) "TOTAL FALTAS          : "
+                DISPLAY (15, 01) "SITUAÇÃO              : "
       
-      * Le o apelido do amigo
-       READAP.
-<<<<<<< Updated upstream
-                ACCEPT  (03, 09) APELIDO
-=======
-                ACCEPT  TAPELIDO
->>>>>>> Stashed changes
+      * Le o RA do aluno
+       READRA.
+                ACCEPT  (3,24) RA
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02
-                   CLOSE AMIGOS
+                   CLOSE NOTAS
                    GO TO ROT-FIM.
            
-<<<<<<< Updated upstream
-      * NOTE: Talvez a linha de baixo quebre             
-                IF APELIDO = SPACES
-=======
-                IF AMIGO-APELIDO = SPACES
->>>>>>> Stashed changes
-                   MOVE "*** APELIDO INVALIDO ***" TO MENS
+                IF RA = SPACES
+                   MOVE "*** RA INVALIDO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO READAP.
-       LER-AMIGOS01.
+                   GO TO READRA.
+       LER-NOTAS01.
+      * TODO: Criar função para a regra da situação do aluno
                 MOVE 0 TO W-SEL
-                READ AMIGOS
+                READ NOTAS
                 IF ST-ERRO NOT = "23"
                    IF ST-ERRO = "00"
-<<<<<<< Updated upstream
-                      DISPLAY (03, 9) APELIDO
-                      DISPLAY (04, 9) NOME
-                      DISPLAY (05, 9) EMAIL
-=======
-                      DISPLAY TELAAMIGO
->>>>>>> Stashed changes
-                      MOVE "*** AMIGO JA CADASTRAD0 ***" TO MENS
+                      DISPLAY (04, 24) NOME
+                      DISPLAY (05, 24) NOTA1 
+                      DISPLAY (06, 24) NOTA2
+                      DISPLAY (07, 24) MEDIA
+                      DISPLAY (08, 24) FALTA1
+                      DISPLAY (09, 24) FALTA2
+                      DISPLAY (10, 24) TOTAL-FALTAS
+                      DISPLAY (15, 24) SITUACAO
+                      MOVE "*** NOTA JÁ CADASTRADA ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       MOVE 1 TO W-SEL
                       GO TO ACE-001
                    ELSE
-                      MOVE "ERRO NA LEITURA ARQUIVO AMIGOS"   TO MENS
+                      MOVE "ERRO NA LEITURA ARQUIVO NOTAS"   TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
                 ELSE
                    NEXT SENTENCE.
       * "Rotinas" de leitura das variaveis
+      * TODO: Corrigir as rotinas de leitura da variavel
       
       * Le o nome do amigo
        READNAME.
@@ -226,18 +147,18 @@
                    GO TO INC-OPC.
       * Rotina de Escrita
        WRITE-REG.
-                WRITE REGAMIGO
+                WRITE REGNOTA
                 IF ST-ERRO = "00" OR "02"
                       MOVE "*** DADOS GRAVADOS *** " TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO INC-001.
       * TODO: Ver exatamente o que esse numero magico "22" faz     
                 IF ST-ERRO = "22"
-                      MOVE "*** AMIGO JA EXISTE ***       " TO MENS
+                      MOVE "*** NOTA JA EXISTE ***       " TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO INC-001
                 ELSE
-                      MOVE "ERRO NA GRAVACAO DO ARQUIVO DE AMIGOS"
+                      MOVE "ERRO NA GRAVACAO DO ARQUIVO DE NOTAS"
                                                        TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM.
@@ -273,7 +194,7 @@
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO EXC-OPC.
        EXC-DL1.
-                DELETE AMIGOS RECORD
+                DELETE NOTAS RECORD
                 IF ST-ERRO = "00"
                    MOVE "*** REGISTRO EXCLUIDO ***           " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
@@ -296,12 +217,12 @@
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO ALT-OPC.
        ALT-RW1.
-                REWRITE REGAMIGO
+                REWRITE REGNOTA
                 IF ST-ERRO = "00" OR "02"
                    MOVE "*** REGISTRO ALTERADO ***         " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO INC-001.
-                MOVE "ERRO NA EXCLUSAO DO REGISTRO AMIGOS"   TO MENS
+                MOVE "ERRO NA EXCLUSAO DO REGISTRO NOTAS"   TO MENS
                 PERFORM ROT-MENS THRU ROT-MENS-FIM
                 GO TO ROT-FIM.
       *
