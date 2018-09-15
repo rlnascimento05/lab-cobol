@@ -1,6 +1,6 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. P18204.
-       AUTHOR. JAMES WANDER FERREIRA DE SOUZA JUNIOR.
+       AUTHOR. RICARDO DE LUCAS DO NASCIMENTO.
       **************************************
       * MANUTENCAO DO CADASTRO DE AMIGOS *
       **************************************
@@ -52,7 +52,7 @@
        77 LIMPA        PIC X(50) VALUE SPACES.
        01 TSEXOAMI     PIC X(12) VALUE SPACES.
        01 TTIPOAMI     PIC X(12) VALUE SPACES.
-      *
+      * WARD: This is important
        01 TABAMIGO.
           03 T1 PIC X(48) VALUE
           "IGREJA      FACULDADE   CLUBE       BALADA    ".
@@ -202,14 +202,14 @@
                       GO TO ROT-FIM
                 ELSE
                     NEXT SENTENCE.
-       INC-001.
+       INITIALIZE.
                 MOVE ZEROS  TO AMIGO-DDD AMIGO-NUMTEL AMIGO-DATANASC
                                AMIGO-TIPO
                 MOVE SPACES TO AMIGO-NOME AMIGO-APELIDO AMIGO-EMAIL
                                AMIGO-SEXO
                 DISPLAY TELAAMIGO.
 
-       INC-002.
+       READ-APELIDO.
                 ACCEPT TAPELIDO
                 ACCEPT W-ACT FROM ESCAPE KEY
                  IF W-ACT = 02
@@ -218,8 +218,8 @@
                 IF AMIGO-APELIDO = SPACES
                    MOVE "*** APELIDO INVALIDO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-002.
-       LER-AMIGOS.
+                   GO TO READ-APELIDO.
+       READ-AMIGO.
                 MOVE 0 TO W-SEL
                 READ AMIGOS
                 IF ST-ERRO NOT = "23"
@@ -235,89 +235,89 @@
                       GO TO ROT-FIM
                 ELSE
                    NEXT SENTENCE.
-       INC-003.
+       READ-NOME.
                 ACCEPT TNOME
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF AMIGO-NOME = SPACES
                      MOVE "****PREENCHA O NOME DO AMIGO****" TO MENS
                      PERFORM ROT-MENS THRU ROT-MENS-FIM
-                     GO TO INC-003
-                IF W-ACT = 02 GO TO INC-004.
-       INC-004.
+                     GO TO READ-NOME
+                IF W-ACT = 02 GO TO READ-EMAIL.
+       READ-EMAIL.
                 ACCEPT TEMAIL
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF AMIGO-EMAIL = SPACES
                     MOVE "****PREENCHA O EMAIL DO AMIGO****" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO INC-004
-                IF W-ACT = 02 GO TO INC-005.
-       INC-005.
+                    GO TO READ-EMAIL
+                IF W-ACT = 02 GO TO READ-DDD.
+       READ-DDD.
                 ACCEPT  TDDD
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF AMIGO-DDD = ZEROS
                     MOVE "****PREENCHA O DDD DO AMIGO****" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO INC-005
-                IF W-ACT = 02 GO TO INC-006.
-       INC-006.
+                    GO TO READ-DDD
+                IF W-ACT = 02 GO TO READ-TELEFONE.
+       READ-TELEFONE.
                 ACCEPT  TTELEFONE
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF AMIGO-TELEFONE = ZEROS
                     MOVE "****PREENCHA O TELEFONE DO AMIGO****" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO INC-006
-                IF W-ACT = 02 GO TO INC-007.
-       INC-007.
+                    GO TO READ-TELEFONE
+                IF W-ACT = 02 GO TO READ-DATANASC.
+       READ-DATANASC.
                 ACCEPT  TDATANASC
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT= 02 GO TO INC-006.
-       INC-008.
+                IF W-ACT= 02 GO TO READ-TELEFONE.
+       READ-SEXO.
                 ACCEPT  TSEXO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT= 02 GO TO INC-007.
+                IF W-ACT= 02 GO TO READ-DATANASC.
                 IF AMIGO-SEXO = "M" OR "m"
                    MOVE "MASCULINO" TO TSEXOAMI
                 ELSE
                    IF AMIGO-SEXO NOT = "F" AND "f"
                      MOVE "SEXO DO AMIGO INCORRETO" TO MENS
                      PERFORM ROT-MENS THRU ROT-MENS-FIM
-                     GO TO INC-008
+                     GO TO READ-SEXO
                    ELSE
                      MOVE "FEMININO" TO TSEXOAMI.
                 DISPLAY TELAAMIGO.
-       INC-009.
+       READ-TIPOAMIGO.
                 ACCEPT  TAMIGO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT= 02 GO TO INC-008.
+                IF W-ACT= 02 GO TO READ-SEXO.
       *
                 IF W-SEL = 1
                               GO TO ALT-OPC.
                 MOVE TDA(AMIGO-TIPO) TO TTIPOAMI
                 DISPLAY TELAAMIGO.
-       INC-OPC.
+       SAVE-AMIGO.
                 MOVE "S" TO W-OPCAO
                 DISPLAY (23, 40) "DADOS OK (S/N) : ".
                 ACCEPT (23, 57) W-OPCAO WITH UPDATE
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-009.
+                IF W-ACT = 02 GO TO READ-TIPOAMIGO.
                 IF W-OPCAO = "N" OR "n"
                    MOVE "*** DADOS RECUSADOS PELO USUARIO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-001.
+                   GO TO INITIALIZE.
                 IF W-OPCAO NOT = "S" AND "s"
                    MOVE "*** DIGITE APENAS S=SIM e N=NAO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-OPC.
-       INC-WR1.
+                   GO TO SAVE-AMIGO.
+       WRITE-AMIGO.
                 WRITE REGAMIGO
                 IF ST-ERRO = "00" OR "02"
                       MOVE "*** DADOS GRAVADOS *** " TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
-                      GO TO INC-001.
+                      GO TO INITIALIZE.
                 IF ST-ERRO = "22"
                       MOVE "*** AMIGO JA EXISTE ***       " TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
-                      GO TO INC-001
+                      GO TO INITIALIZE
                 ELSE
                       MOVE "ERRO NA GRAVACAO DO ARQUIVO DE AMIGOS"
                                                        TO MENS
@@ -339,9 +339,9 @@
                 DISPLAY (23, 12) MENS
                 IF W-ACT = 02
                    MOVE 02 TO W-SEL
-                   GO TO INC-001.
+                   GO TO INITIALIZE.
                 IF W-ACT = 03
-                   GO TO INC-003.
+                   GO TO READ-NOME.
       *
        EXC-OPC.
                 DISPLAY (23, 40) "EXCLUIR   (S/N) : ".
@@ -349,7 +349,7 @@
                 IF W-OPCAO = "N" OR "n"
                    MOVE "*** REGISTRO NAO EXCLUIDO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-001.
+                   GO TO INITIALIZE.
                 IF W-OPCAO NOT = "S" AND "s"
                    MOVE "*** DIGITE APENAS S=SIM  e  N=NAO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
@@ -359,7 +359,7 @@
                 IF ST-ERRO = "00"
                    MOVE "*** REGISTRO EXCLUIDO ***           " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-001.
+                   GO TO INITIALIZE.
                 MOVE "ERRO NA EXCLUSAO DO REGISTRO "   TO MENS
                 PERFORM ROT-MENS THRU ROT-MENS-FIM
                 GO TO ROT-FIM.
@@ -368,11 +368,11 @@
                 DISPLAY (23, 40) "ALTERAR  (S/N) : ".
                 ACCEPT (23, 57) W-OPCAO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-005.
+                IF W-ACT = 02 GO TO READ-DDD.
                 IF W-OPCAO = "N" OR "n"
                    MOVE "*** INFORMACOES NAO ALTERADAS *** " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-001.
+                   GO TO INITIALIZE.
                 IF W-OPCAO NOT = "S" AND "s"
                    MOVE "*** DIGITE APENAS S=SIM  e  N=NAO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
@@ -382,7 +382,7 @@
                 IF ST-ERRO = "00" OR "02"
                    MOVE "*** REGISTRO ALTERADO ***         " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-001.
+                   GO TO INITIALIZE.
                 MOVE "ERRO NA EXCLUSAO DO REGISTRO PRODUTO"   TO MENS
                 PERFORM ROT-MENS THRU ROT-MENS-FIM
                 GO TO ROT-FIM.
