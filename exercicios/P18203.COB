@@ -119,17 +119,16 @@
       * "Rotinas" de leitura das variaveis
       * TODO: Corrigir as rotinas de leitura da variavel
       
-      * Le o nome do amigo
        READNAME.
-                ACCEPT (04, 9) NOME
+                ACCEPT (04, 24) NOME
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO READEMAIL.
+                IF W-ACT = 02 GO TO READNOTA1.
       
-      * Le o email do amigo
-       READEMAIL.
-                ACCEPT (05, 9) EMAIL
+       READNOTA1.
+                ACCEPT (05, 24) NOTA1
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO INC-OPC.
+
 
        INC-OPC.
                 MOVE "S" TO W-OPCAO
