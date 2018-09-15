@@ -39,6 +39,7 @@
                         07 AMIGO-SEC PIC 9(02).
                         07 AMIGO-DEC PIC 9(02).
                     05 AMIGO-SEXO    PIC X(01).
+                    05 AMIGO-GENERO  PIC X(01).
                     05 AMIGO-TIPO    PIC 9(01).
       *
       *-----------------------------------------------------------------
@@ -52,6 +53,7 @@
        77 LIMPA        PIC X(50) VALUE SPACES.
        01 TSEXOAMI     PIC X(12) VALUE SPACES.
        01 TTIPOAMI     PIC X(12) VALUE SPACES.
+       01 TTIPOGENERO  PIC X(25) VALUE SPACES.
       * WARD: This is important
        01 TABAMIGO.
           03 T1 PIC X(48) VALUE
@@ -62,7 +64,11 @@
           03 T4 PIC X(12) VALUE "INIMIGO".
            
        01 TABAUX REDEFINES TABAMIGO.
-           03 TDA        PIC X(12) OCCURS 10 TIMES. 
+           03 TDA        PIC X(12) OCCURS 10 TIMES.
+       01 TABGENERO.
+           03 T1 PIC X(48) VALUE
+           "HETERO  BISSEXUAL   HOMOSSEXUAL OUTROS   ".
+           
       *---------------------------------------------------------
        SCREEN SECTION.
        01  TELAAMIGO.
@@ -285,13 +291,22 @@
                    ELSE
                      MOVE "FEMININO" TO TSEXOAMI.
                 DISPLAY TELAAMIGO.
+       READ-GENERO.
+                ACCEPT  TGENERO
+                ACCEPT W-ACT FROM ESCAPE KEY
+                IF W-ACT= 02 
+                    GO TO READ-SEXO.
+                IF W-SEL = 1
+                    GO TO ALT-OPC.
+                MOVE TDA(AMIGO-GENERO) TO TTIPOGENERO
+                DISPLAY TELAAMIGO.
        READ-TIPOAMIGO.
                 ACCEPT  TAMIGO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT= 02 GO TO READ-SEXO.
-      *
+                IF W-ACT= 02 
+                    GO TO READ-GENERO.
                 IF W-SEL = 1
-                              GO TO ALT-OPC.
+                    GO TO ALT-OPC.
                 MOVE TDA(AMIGO-TIPO) TO TTIPOAMI
                 DISPLAY TELAAMIGO.
        SAVE-AMIGO.
