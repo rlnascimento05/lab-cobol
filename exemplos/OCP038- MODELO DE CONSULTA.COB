@@ -22,6 +22,7 @@
        DATA DIVISION.
        FILE SECTION.
       *
+      *
       *COPY OCA001.BOK.
       *
       *****************************************************************
@@ -94,14 +95,16 @@
       *-----------------------------------------------------------------
       *
       ******************
-      * REPORT SECTION *
+      * LINHA DETALHE  *
       ******************
       *
        01 DET2.
           03 FILLER    PIC X(16) VALUE SPACES.
-          03 DET21     PIC 9(03) VALUE ZEROS.
+      * Esse filler são as primeiras 16 espacos da linha que ele não
+      * vai usar
+          03 DET-CEP     PIC 9(08) VALUE ZEROS.
           03 FILLER    PIC X(04) VALUE SPACES.
-          03 DET22     PIC X(40) VALUE SPACES.
+          03 DET-LOGRA     PIC X(35) VALUE SPACES.
       *
       ******************
       * ROTINA DE TELA *
@@ -117,15 +120,15 @@
            05  LINE 02  COLUMN 01
                VALUE  "º                      *** CONSULTA DE C".
            05  LINE 02  COLUMN 41
-               VALUE  "ENTROS DE CUSTOS ***                   º".
+               VALUE  "EP ***                                 º".
            05  LINE 03  COLUMN 01
                VALUE  "ÇÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ".
            05  LINE 03  COLUMN 41
                VALUE  "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¶".
            05  LINE 04  COLUMN 01
-               VALUE  "º              CODIGO                 DE".
+               VALUE  "º              CODIGO                 LO".
            05  LINE 04  COLUMN 41
-               VALUE  "NOMINACAO                              º".
+               VALUE  "GRADOURO                               º".
            05  LINE 05  COLUMN 01
                VALUE  "º              ------   ----------------".
            05  LINE 05  COLUMN 41
@@ -232,10 +235,10 @@
            PERFORM INVNOR.
            MOVE DATA-N TO DATA-EQ.
        INC-OP1.
-           OPEN I-O   OCA001
+           OPEN INPUT   OCA001
            IF ST-ERRO NOT = "00"
               IF ST-ERRO = "30"
-                 MOVE "ARQUIVO DE CENTROS DE CUSTOS NAO EXISTE" TO MENS
+                 MOVE "ARQUIVO DE CEPS NAO EXISTE" TO MENS
                  PERFORM ROT-MENS THRU ROT-MENS-FIM
                  GO TO ROT-FIM2
               ELSE
@@ -261,8 +264,8 @@
                       MOVE "*** FUNCAO NAO DEFINIDA ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO INC-001A.
-           MOVE OCW03801 TO OCC00101
-           START OCA001 KEY IS NOT LESS OCK00101 INVALID KEY
+           START CADCEP KEY IS NOT LESS CEP-CODIGO INVALID KEY
+      *
                  MOVE "*** FIM DE PROCESSAMENTO ***" TO MENS
                  PERFORM ROT-MENS THRU ROT-MENS-FIM
                  GO TO INC-001.
@@ -301,8 +304,8 @@
            ELSE
               NEXT SENTENCE.
        ROT-MONTAR.
-           MOVE OCC00101 TO DET21
-           MOVE OCC00102 TO DET22
+           MOVE CEP-CODIGO TO DET-CEP
+           MOVE CEP-LOGRA TO DET-LOGRA
            COMPUTE LIN = CONLIN + 5
            DISPLAY (LIN, 02) DET2
            ADD 1 TO CONLIN
@@ -314,7 +317,8 @@
            MOVE "S" TO W-OPCAO
            ACCEPT  (23, 38) W-OPCAO  WITH UPDATE
            IF W-OPCAO = "S"
-                  MOVE 01 TO CONLIN
+                  MOVE ZEROES TO CEP-CODIGO
+                  MOVE SPACES TO CEP-LOGRA
                   DISPLAY OCT038
                   GO TO INC-RD2.
            IF W-OPCAO NOT = "N"
