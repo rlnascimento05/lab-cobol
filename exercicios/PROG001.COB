@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. P18201
+       PROGRAM-ID. PROG001
        AUTHOR. RICARDO DE LUCAS DO NASCIMENTO.
       **************************************
       * CADASTRO DE AMIGOS  * TODO: CHANGE THIS LATER
@@ -83,7 +83,7 @@
                 DISPLAY (09, 01) "  NUMERO       : ".
       * Le o apelido do amigo
        READAP.
-                ACCEPT  (03, 09) APELIDO
+                ACCEPT  (03, 17) APELIDO
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02
                    CLOSE AMIGOS
@@ -203,7 +203,7 @@
       * W-ACT = 03 -> O usuário teclou F2 
                 IF W-ACT = 03
                    MOVE 02 TO W-SEL
-                   PERFORM READNAME THRU READEMAIL
+                   PERFORM READNAME THRU READTELNUM
                    GO TO ALT-OPC.
        
        EXC-OPC.
