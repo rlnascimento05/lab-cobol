@@ -32,7 +32,7 @@
                 03 FALTA1               PIC 9(02).
                 03 FALTA2               PIC 9(02).
                 03 TOTAL-FALTAS         PIC 9(02).
-                03 SITUACAO             PIC 9(01).
+                03 SITUACAO             PIC X(20).
       *
       *-----------------------------------------------------------------
        WORKING-STORAGE SECTION.
@@ -156,7 +156,18 @@
            DISPLAY (10, 19) TOTAL-FALTAS.
 
        SHOW-SITUACAO.
-           DISPLAY (15, 19) "IMPLEMENTAR ESSE CARA"
+           IF TOTAL-FALTAS > 20
+                IF MEDIA > 4 
+                        MOVE "RECUPERACAO - FALTAS" TO SITUACAO
+                ELSE
+                        MOVE "REPROVADO" TO SITUACAO
+           ELSE
+               IF MEDIA > 4
+                        MOVE "APROVADO" TO SITUACAO
+               ELSE
+                        MOVE "RECUPERACAO - NOTAS" TO SITUACAO
+           
+           DISPLAY (15, 19) SITUACAO
            IF W-SEL = 03 GO TO ALT-OPC.
 
        INC-OPC.
