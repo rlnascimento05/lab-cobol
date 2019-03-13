@@ -26,9 +26,9 @@
        01 REGNOTAS.
                 03 RA                   PIC X(13).
                 03 NOME                 PIC X(32).
-                03 NOTA1                PIC 9(02)V9.
-                03 NOTA2                PIC 9(02)V9.
-                03 MEDIA                PIC 9(02)V9.
+                03 NOTA1                PIC 9(02).
+                03 NOTA2                PIC 9(02).
+                03 MEDIA                PIC 9(02).
                 03 FALTA1               PIC 9(02).
                 03 FALTA2               PIC 9(02).
                 03 TOTAL-FALTAS         PIC 9(02).
@@ -172,7 +172,7 @@
 
        INC-OPC.
                 MOVE "S" TO W-OPCAO
-                DISPLAY (23, 40) "DADOS OK (S/N) : ".
+                DISPLAY (23, 40) "DADOS OK (S/n) : ".
                 ACCEPT (23, 57) W-OPCAO WITH UPDATE
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO CLEAR-SCREEN.
@@ -220,7 +220,8 @@
                    GO TO CLEAR-SCREEN.
                 IF W-ACT = 03
                   MOVE 03 TO W-SEL      
-                  GO TO LER-NOME.
+                  PERFORM LER-NOME THRU SHOW-SITUACAO
+                  GO TO ALT-OPC.
       *
        EXC-OPC.
                 DISPLAY (23, 40) "EXCLUIR   (S/N) : ".
