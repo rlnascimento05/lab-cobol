@@ -49,6 +49,69 @@
        77 LIMPA        PIC X(50) VALUE SPACES.
       *-----------------------------------------------------------------
       *
+       SCREEN SECTION.
+
+       01  TELANOTAS.
+           05  LINE 02  COLUMN 01
+               VALUE  "                             CADASTRO DE".
+           05  LINE 02  COLUMN 41
+               VALUE  " NOTAS".
+           05  LINE 04  COLUMN 01
+               VALUE  "   RA  :".
+           05  LINE 05  COLUMN 01
+               VALUE  "   NOME:".
+           05  LINE 07  COLUMN 01
+               VALUE  "   NOTA 1  :".
+           05  LINE 07  COLUMN 41
+               VALUE  "  FALTA 1 :".
+           05  LINE 08  COLUMN 01
+               VALUE  "   NOTA 2  :".
+           05  LINE 08  COLUMN 41
+               VALUE  "  FALTA 2 :".
+           05  LINE 09  COLUMN 01
+               VALUE  "   MEDIA   :".
+           05  LINE 09  COLUMN 41
+               VALUE  "  TOTAL   :".
+           05  LINE 11  COLUMN 01
+               VALUE  "   SITUACAO:".
+           05  TRA
+               LINE 04  COLUMN 09  PIC X(13)
+               USING  RA
+               HIGHLIGHT.
+           05  TNOME
+               LINE 05  COLUMN 09  PIC X(32)
+               USING  NOME
+               HIGHLIGHT.
+           05  TNOTA1
+               LINE 07  COLUMN 14  PIC 9(02)
+               USING  NOTA1
+               HIGHLIGHT.
+           05  TFALTA1
+               LINE 07  COLUMN 53  PIC 9(02)
+               USING  FALTA1
+               HIGHLIGHT.
+           05  TNOTA2
+               LINE 08  COLUMN 14  PIC 9(02)
+               USING  NOTA2
+               HIGHLIGHT.
+           05  TFALTA2
+               LINE 08  COLUMN 53  PIC 9(02)
+               USING  FALTA2
+               HIGHLIGHT.
+           05  TMEDIA
+               LINE 09  COLUMN 14  PIC 9(02)
+               USING  MEDIA
+               HIGHLIGHT.
+           05  TTOTALFALTA
+               LINE 09  COLUMN 53  PIC 9(02)
+               USING  TOTAL-FALTAS
+               HIGHLIGHT.
+           05  TSITUACAO
+               LINE 11  COLUMN 14  PIC X(20)
+               USING  SITUACAO
+               HIGHLIGHT.
+
+      *-----------------------------------------------------------------
        PROCEDURE DIVISION.
        INICIO.
 
@@ -71,20 +134,9 @@
                 MOVE ZEROS TO NOTA1 NOTA2 MEDIA 
                 MOVE ZEROS TO FALTA1 FALTA2 TOTAL-FALTAS
                 MOVE SPACES TO RA NOME SITUACAO
-                DISPLAY (01, 01) ERASE.
-                DISPLAY (01, 20) "CADASTRO DE NOTAS"
-                DISPLAY (03, 01) "RA               : "
-                DISPLAY (04, 01) "NOME             : "
-                DISPLAY (05, 01) "NOTA1            : "
-                DISPLAY (06, 01) "NOTA2            : "
-                DISPLAY (07, 01) "MEDIA            : "
-                DISPLAY (08, 01) "FALTA1           : "
-                DISPLAY (09, 01) "FALTA2           : "
-                DISPLAY (10, 01) "TOTAL FALTAS     : "
-                DISPLAY (15, 01) "SITUACAO         : ".
-      
+                DISPLAY TELANOTAS.  
        LER-RA.
-           ACCEPT (3, 19) RA
+           ACCEPT TRA
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02
                    CLOSE NOTAS
@@ -100,14 +152,14 @@
                 READ NOTAS
                 IF ST-ERRO NOT = "23"
                    IF ST-ERRO = "00"
-                      DISPLAY (04, 19) NOME
-                      DISPLAY (05, 19) NOTA1 
-                      DISPLAY (06, 19) NOTA2
-                      DISPLAY (07, 19) MEDIA
-                      DISPLAY (08, 19) FALTA1
-                      DISPLAY (09, 19) FALTA2
-                      DISPLAY (10, 19) TOTAL-FALTAS
-                      DISPLAY (15, 19) SITUACAO
+                      DISPLAY TNOME
+                      DISPLAY TNOTA1 
+                      DISPLAY TNOTA2
+                      DISPLAY TMEDIA
+                      DISPLAY TFALTA1
+                      DISPLAY TFALTA2
+                      DISPLAY TTOTALFALTA
+                      DISPLAY TSITUACAO
                       MOVE "*** NOTA JÁ CADASTRADA ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       MOVE 1 TO W-SEL
@@ -122,38 +174,38 @@
       * TODO: Corrigir as rotinas de leitura da variavel
       
        LER-NOME.
-                ACCEPT (04, 19) NOME
+                ACCEPT TNOME
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO LER-NOTAS01.
        
        LER-NOTAS01.
-                ACCEPT (05, 19) NOTA1
+                ACCEPT TNOTA1
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO LER-NOTAS02.
       
        LER-NOTAS02.
-                ACCEPT (06, 19) NOTA2
+                ACCEPT TNOTA2
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO CALC-MEDIA.
 
        CALC-MEDIA.
            COMPUTE MEDIA = (NOTA1 + NOTA2) / 2
-           DISPLAY(07, 19) MEDIA
+           DISPLAY TMEDIA
            GO TO LER-FALTAS01.
 
        LER-FALTAS01.
-                ACCEPT (08, 19) FALTA1
+                ACCEPT TFALTA1
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO LER-FALTAS02.
 
        LER-FALTAS02.
-                ACCEPT (09, 19) FALTA2
+                ACCEPT TFALTA2
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO CALC-TOTALFALTAS.
 
        CALC-TOTALFALTAS.
            COMPUTE TOTAL-FALTAS = (FALTA1 + FALTA2)
-           DISPLAY (10, 19) TOTAL-FALTAS.
+           DISPLAY TTOTALFALTA.
 
        SHOW-SITUACAO.
            IF TOTAL-FALTAS > 20
@@ -167,7 +219,7 @@
                ELSE
                         MOVE "RECUPERACAO - NOTAS" TO SITUACAO
            
-           DISPLAY (15, 19) SITUACAO
+           DISPLAY TSITUACAO
            IF W-SEL = 03 GO TO ALT-OPC.
 
        INC-OPC.
