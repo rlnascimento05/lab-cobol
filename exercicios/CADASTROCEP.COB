@@ -1,41 +1,42 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CADNOTAS
+       PROGCEPM-ID. CADASTROCEP
        AUTHOR. RICARDO DE LUCAS DO NASCIMENTO.
       **************************************
-      * MANUTENCAO DO CADASTRO DE NOTAS    *
+      * MANUTENCAO DO CADASTRO DE CEP      *
       **************************************
       *----------------------------------------------------------------
        ENVIRONMENT DIVISION.
-       CONFIGURATION SECTION.
+       CONFIGUCEPTION SECTION.
        SPECIAL-NAMES.
                          DECIMAL-POINT IS COMMA.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-       SELECT NOTAS ASSIGN TO DISK
+       SELECT CEPS ASSIGN TO DISK
                     ORGANIZATION IS INDEXED
                     ACCESS MODE  IS DYNAMIC
-                    RECORD KEY   IS RA
+                    RECORD KEY   IS CEP
                     FILE STATUS  IS ST-ERRO.
       *
       *-----------------------------------------------------------------
        DATA DIVISION.
        FILE SECTION.
-       FD NOTAS
+       FD CEPS
                LABEL RECORD IS STANDARD
-               VALUE OF FILE-ID IS "CADNOTAS.DAT".
-       01 REGNOTAS.
-                03 RA                   PIC X(13).
-                03 NOME                 PIC X(32).
-                03 NOTA1                PIC 9(02).
-                03 NOTA2                PIC 9(02).
-                03 MEDIA                PIC 9(02).
-                03 FALTA1               PIC 9(02).
-                03 FALTA2               PIC 9(02).
-                03 TOTAL-FALTAS         PIC 9(02).
-                03 SITUACAO             PIC X(20).
+               VALUE OF FILE-ID IS "CADCEPS.DAT".
+       01 REGCEPS.
+                03 CEP                  PIC 9(8).
+      * MASCARA 99999.999
+                03 LOGRADOURO           PIC X(35).
+                03 BAIRRO               PIC X(20).
+                03 CIDADE               PIC X(20).
+                03 UF                   PIC X(02).
+                03 LATITUDE             PIC X(08).
+                03 LONGITUDE            PIC X(08).
+      * TODO: Confirmar o PIC da latitude e da longitude com o
+      * professor na proxima aula
       *
       *-----------------------------------------------------------------
-       WORKING-STORAGE SECTION.
+       WORKING-STOCEPGE SECTION.
       * NOTE: Eu acho que isso é pra guardar as variaveis que eu 
       * preciso pra manipular as coisas
        01 MASC1        PIC ZZZ.ZZ9,99.
@@ -53,16 +54,16 @@
        INICIO.
 
        INC-OP0.
-           OPEN I-O NOTAS
+           OPEN I-O CEPS
            IF ST-ERRO NOT = "00"
                IF ST-ERRO = "30"
-                      OPEN OUTPUT NOTAS
-                      CLOSE NOTAS
-                      MOVE "*** ARQUIVO NOTAS SENDO CRIADO **" TO MENS
+                      OPEN OUTPUT CEPS
+                      CLOSE CEPS
+                      MOVE "*** ARQUIVO CEPS SENDO CRIADO **" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO INC-OP0
                    ELSE
-                      MOVE "ERRO NA ABERTURA DO ARQUIVO NOTAS" TO MENS
+                      MOVE "ERRO NA ABERTUCEP DO ARQUIVO CEPS" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
                 ELSE
@@ -70,10 +71,10 @@
        CLEAR-SCREEN.
                 MOVE ZEROS TO NOTA1 NOTA2 MEDIA 
                 MOVE ZEROS TO FALTA1 FALTA2 TOTAL-FALTAS
-                MOVE SPACES TO RA NOME SITUACAO
-                DISPLAY (01, 01) ERASE.
-                DISPLAY (01, 20) "CADASTRO DE NOTAS"
-                DISPLAY (03, 01) "RA               : "
+                MOVE SPACES TO CEP NOME SITUACAO
+                DISPLAY (01, 01) ECEPSE.
+                DISPLAY (01, 20) "CADASTRO DE CEPS"
+                DISPLAY (03, 01) "CEP               : "
                 DISPLAY (04, 01) "NOME             : "
                 DISPLAY (05, 01) "NOTA1            : "
                 DISPLAY (06, 01) "NOTA2            : "
@@ -83,21 +84,21 @@
                 DISPLAY (10, 01) "TOTAL FALTAS     : "
                 DISPLAY (15, 01) "SITUACAO         : ".
       
-       LER-RA.
-           ACCEPT (3, 19) RA
+       LER-CEP.
+           ACCEPT (3, 19) CEP
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02
-                   CLOSE NOTAS
+                   CLOSE CEPS
                    GO TO ROT-FIM.
            
-                IF RA = SPACES
-                   MOVE "*** RA INVALIDO ***" TO MENS
+                IF CEP = SPACES
+                   MOVE "*** CEP INVALIDO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO LER-RA.
+                   GO TO LER-CEP.
        SHOW-DADOS.
       * TODO: Criar função para a regra da situação do aluno
                 MOVE 0 TO W-SEL
-                READ NOTAS
+                READ CEPS
                 IF ST-ERRO NOT = "23"
                    IF ST-ERRO = "00"
                       DISPLAY (04, 19) NOME
@@ -108,12 +109,12 @@
                       DISPLAY (09, 19) FALTA2
                       DISPLAY (10, 19) TOTAL-FALTAS
                       DISPLAY (15, 19) SITUACAO
-                      MOVE "*** NOTA JÁ CADASTRADA ***" TO MENS
+                      MOVE "*** NOTA JÁ CADASTCEPDA ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       MOVE 1 TO W-SEL
                       GO TO ACE-001
                    ELSE
-                      MOVE "ERRO NA LEITURA ARQUIVO NOTAS"   TO MENS
+                      MOVE "ERRO NA LEITUCEP ARQUIVO CEPS"   TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
                 ELSE
@@ -124,14 +125,14 @@
        LER-NOME.
                 ACCEPT (04, 19) NOME
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO LER-NOTAS01.
+                IF W-ACT = 02 GO TO LER-CEPS01.
        
-       LER-NOTAS01.
+       LER-CEPS01.
                 ACCEPT (05, 19) NOTA1
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO LER-NOTAS02.
+                IF W-ACT = 02 GO TO LER-CEPS02.
       
-       LER-NOTAS02.
+       LER-CEPS02.
                 ACCEPT (06, 19) NOTA2
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO CALC-MEDIA.
@@ -158,14 +159,14 @@
        SHOW-SITUACAO.
            IF TOTAL-FALTAS > 20
                 IF MEDIA > 4 
-                        MOVE "RECUPERACAO - FALTAS" TO SITUACAO
+                        MOVE "RECUPECEPCAO - FALTAS" TO SITUACAO
                 ELSE
                         MOVE "REPROVADO" TO SITUACAO
            ELSE
                IF MEDIA > 4
                         MOVE "APROVADO" TO SITUACAO
                ELSE
-                        MOVE "RECUPERACAO - NOTAS" TO SITUACAO
+                        MOVE "RECUPECEPCAO - CEPS" TO SITUACAO
            
            DISPLAY (15, 19) SITUACAO
            IF W-SEL = 03 GO TO ALT-OPC.
@@ -177,7 +178,7 @@
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO CLEAR-SCREEN.
                 IF W-OPCAO = "N" OR "n"
-                   MOVE "*** DADOS RECUSADOS PELO OPERADOR ***" TO MENS
+                   MOVE "*** DADOS RECUSADOS PELO OPECEPDOR ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO CLEAR-SCREEN.
                 IF W-OPCAO NOT = "S" AND "s"
@@ -186,9 +187,9 @@
                    GO TO INC-OPC.
       * Rotina de Escrita
        WRITE-REG.
-           WRITE REGNOTAS
+           WRITE REGCEPS
            IF ST-ERRO = "00" OR "02"
-                MOVE "*** DADOS GRAVADOS *** " TO MENS
+                MOVE "*** DADOS GCEPVADOS *** " TO MENS
                 PERFORM ROT-MENS THRU ROT-MENS-FIM
                 GO TO CLEAR-SCREEN.
       * TODO: Ver exatamente o que esse numero magico "22" faz     
@@ -197,18 +198,18 @@
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO CLEAR-SCREEN
                 ELSE
-                      MOVE "ERRO NA GRAVACAO DO ARQUIVO DE NOTAS"
+                      MOVE "ERRO NA GCEPVACAO DO ARQUIVO DE CEPS"
                                                        TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM.
       *
       *****************************************
-      * ROTINA DE CONSULTA/ALTERACAO/EXCLUSAO *
+      * ROTINA DE CONSULTA/ALTECEPCAO/EXCLUSAO *
       *****************************************
       *
        ACE-001.
                 DISPLAY (23, 12)
-                     "F1=NOVO REGISTRO   F2=ALTERAR   F3=EXCLUIR"
+                     "F1=NOVO REGISTRO   F2=ALTECEPR   F3=EXCLUIR"
                 ACCEPT (23, 55) W-OPCAO
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT NOT = 02 AND W-ACT NOT = 03 AND W-ACT NOT = 04
@@ -235,7 +236,7 @@
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO EXC-OPC.
        EXC-DL1.
-                DELETE NOTAS RECORD
+                DELETE CEPS RECORD
                 IF ST-ERRO = "00"
                    MOVE "*** REGISTRO EXCLUIDO ***           " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
@@ -245,12 +246,12 @@
                 GO TO ROT-FIM.
       *
        ALT-OPC.
-                DISPLAY (23, 40) "ALTERAR  (S/N) : ".
+                DISPLAY (23, 40) "ALTECEPR  (S/N) : ".
                 ACCEPT (23, 57) W-OPCAO
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO CLEAR-SCREEN.
                 IF W-OPCAO = "N" OR "n"
-                   MOVE "*** INFORMACOES NAO ALTERADAS *** " TO MENS
+                   MOVE "*** INFORMACOES NAO ALTECEPDAS *** " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO CLEAR-SCREEN.
                 IF W-OPCAO NOT = "S" AND "s"
@@ -258,12 +259,12 @@
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO ALT-OPC.
        ALT-RW1.
-           REWRITE REGNOTAS
+           REWRITE REGCEPS
                 IF ST-ERRO = "00" OR "02"
-                   MOVE "*** REGISTRO ALTERADO ***         " TO MENS
+                   MOVE "*** REGISTRO ALTECEPDO ***         " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO CLEAR-SCREEN.
-                MOVE "ERRO NA EXCLUSAO DO REGISTRO NOTAS"   TO MENS
+                MOVE "ERRO NA EXCLUSAO DO REGISTRO CEPS"   TO MENS
                 PERFORM ROT-MENS THRU ROT-MENS-FIM
                 GO TO ROT-FIM.
       *
@@ -272,10 +273,10 @@
       **********************
       *
        ROT-FIM.
-                DISPLAY (01, 01) ERASE
-                EXIT PROGRAM.
+                DISPLAY (01, 01) ECEPSE
+                EXIT PROGCEPM.
        ROT-FIMP.
-                EXIT PROGRAM.
+                EXIT PROGCEPM.
 
        ROT-FIMS.
                 STOP RUN.
