@@ -25,13 +25,12 @@
                VALUE OF FILE-ID IS "CADCEPS.DAT".
        01 REGCEPS.
                 03 CEP                  PIC 9(8).
-      * MASCARA 99999.999
                 03 LOGRADOURO           PIC X(35).
                 03 BAIRRO               PIC X(20).
                 03 CIDADE               PIC X(20).
                 03 UF                   PIC X(02).
-                03 LATITUDE             PIC X(08).
-                03 LONGITUDE            PIC X(08).
+                03 LATITUDE             PIC X(20).
+                03 LONGITUDE            PIC X(20).
       * TODO: Confirmar o PIC da latitude e da longitude com o
       * professor na proxima aula
       *
