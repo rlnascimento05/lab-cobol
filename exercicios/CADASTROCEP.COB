@@ -35,7 +35,7 @@
       * professor na proxima aula
       *
       *-----------------------------------------------------------------
-       WORKING-STOCEPGE SECTION.
+       WORKING-STORAGE SECTION.
       * NOTE: Eu acho que isso é pra guardar as variaveis que eu 
       * preciso pra manipular as coisas
        01 MASC1        PIC ZZZ.ZZ9,99.
@@ -48,6 +48,61 @@
        77 MENS         PIC X(50) VALUE SPACES.
        77 LIMPA        PIC X(50) VALUE SPACES.
       *-----------------------------------------------------------------
+      
+       SCREEN SECTION
+
+       01  TELACEP.
+           05  BLANK SCREEN.
+           05  LINE 02  COLUMN 01 
+               VALUE  "                               Cadastro".
+           05  LINE 02  COLUMN 41 
+               VALUE  "de Cep".
+           05  LINE 04  COLUMN 01 
+               VALUE  "    CEP:".
+           05  LINE 06  COLUMN 01 
+               VALUE  "    Logradouro:".
+           05  LINE 07  COLUMN 01 
+               VALUE  "    Bairro    :".
+           05  LINE 08  COLUMN 01 
+               VALUE  "    Cidade    :".
+           05  LINE 08  COLUMN 41 
+               VALUE  "  UF:".
+           05  LINE 10  COLUMN 01 
+               VALUE  "    Latitude  :".
+           05  LINE 11  COLUMN 01 
+               VALUE  "    Longitude :".
+           05  TCEP
+               LINE 04  COLUMN 10  PIC 99999.999
+               USING  CEP
+               HIGHLIGHT.
+           05  TLOGRADOURO
+               LINE 06  COLUMN 17  PIC X(35)
+               USING  LOGRADOURO
+               HIGHLIGHT.
+           05  TBAIRRO
+               LINE 07  COLUMN 17  PIC X(20)
+               USING  BAIRRO
+               HIGHLIGHT.
+           05  TCIDADE
+               LINE 08  COLUMN 17  PIC X(20)
+               USING  CIDADE
+               HIGHLIGHT.
+           05  TUF
+               LINE 08  COLUMN 47  PIC X(02)
+               USING  UF
+               HIGHLIGHT.
+           05  TLATITUDE
+               LINE 10  COLUMN 17  PIC X(20)
+               USING  LATITUDE
+               HIGHLIGHT.
+           05  TLONGITUDE
+               LINE 11  COLUMN 17  PIC X(20)
+               USING  LONGITUDE
+               HIGHLIGHT.
+           05  TMENS
+               LINE 15  COLUMN 13  PIC X(50)
+               USING  MENS
+               HIGHLIGHT.
       *
        PROCEDURE DIVISION.
        INICIO.
@@ -71,7 +126,7 @@
                 MOVE ZEROS TO NOTA1 NOTA2 MEDIA 
                 MOVE ZEROS TO FALTA1 FALTA2 TOTAL-FALTAS
                 MOVE SPACES TO CEP NOME SITUACAO
-                DISPLAY (01, 01) ERASE.
+                DISPLAY TELACEP.
       
        LER-CEP.
            ACCEPT (3, 19) CEP
@@ -90,14 +145,13 @@
                 READ CEPS
                 IF ST-ERRO NOT = "23"
                    IF ST-ERRO = "00"
-                      DISPLAY (04, 19) NOME
-                      DISPLAY (05, 19) NOTA1 
-                      DISPLAY (06, 19) NOTA2
-                      DISPLAY (07, 19) MEDIA
-                      DISPLAY (08, 19) FALTA1
-                      DISPLAY (09, 19) FALTA2
-                      DISPLAY (10, 19) TOTAL-FALTAS
-                      DISPLAY (15, 19) SITUACAO
+                      DISPLAY TCEP
+                      DISPLAY TLOGRADOURO 
+                      DISPLAY TBAIRRO
+                      DISPLAY TCIDADE
+                      DISPLAY TUF
+                      DISPLAY TLATITUDE
+                      DISPLAY TLONGITUDE
                       MOVE "*** NOTA JÁ CADASTCEPDA ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       MOVE 1 TO W-SEL
@@ -277,13 +331,11 @@
        ROT-MENS.
                 MOVE ZEROS TO W-CONT.
        ROT-MENS1.
-               DISPLAY (23, 12) MENS.
+               DISPLAY TMENS.
        ROT-MENS2.
                 ADD 1 TO W-CONT
                 IF W-CONT < 1500
                    GO TO ROT-MENS2
-                ELSE
-                   DISPLAY (23, 12) LIMPA.
        ROT-MENS-FIM.
                 EXIT.
        ROT-ALFA-FIM.
