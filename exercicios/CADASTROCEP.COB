@@ -63,7 +63,7 @@
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO INC-OP0
                    ELSE
-                      MOVE "ERRO NA ABERTUCEP DO ARQUIVO CEPS" TO MENS
+                      MOVE "ERRO NA ABERTURA DO ARQUIVO CEPS" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
                 ELSE
@@ -72,17 +72,7 @@
                 MOVE ZEROS TO NOTA1 NOTA2 MEDIA 
                 MOVE ZEROS TO FALTA1 FALTA2 TOTAL-FALTAS
                 MOVE SPACES TO CEP NOME SITUACAO
-                DISPLAY (01, 01) ECEPSE.
-                DISPLAY (01, 20) "CADASTRO DE CEPS"
-                DISPLAY (03, 01) "CEP               : "
-                DISPLAY (04, 01) "NOME             : "
-                DISPLAY (05, 01) "NOTA1            : "
-                DISPLAY (06, 01) "NOTA2            : "
-                DISPLAY (07, 01) "MEDIA            : "
-                DISPLAY (08, 01) "FALTA1           : "
-                DISPLAY (09, 01) "FALTA2           : "
-                DISPLAY (10, 01) "TOTAL FALTAS     : "
-                DISPLAY (15, 01) "SITUACAO         : ".
+                DISPLAY (01, 01) ERASE.
       
        LER-CEP.
            ACCEPT (3, 19) CEP
