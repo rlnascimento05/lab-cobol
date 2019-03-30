@@ -31,9 +31,6 @@
                 03 UF                   PIC X(02).
                 03 LATITUDE             PIC X(20).
                 03 LONGITUDE            PIC X(20).
-      * TODO: Confirmar o PIC da latitude e da longitude com o
-      * professor na proxima aula
-      *
       *-----------------------------------------------------------------
        WORKING-STORAGE SECTION.
       * NOTE: Eu acho que isso é pra guardar as variaveis que eu 
@@ -123,13 +120,13 @@
                 ELSE
                     NEXT SENTENCE.
        CLEAR-SCREEN.
-                MOVE ZEROS TO NOTA1 NOTA2 MEDIA 
-                MOVE ZEROS TO FALTA1 FALTA2 TOTAL-FALTAS
-                MOVE SPACES TO CEP NOME SITUACAO
+                MOVE ZEROS TO CEP 
+                MOVE SPACES TO LOGRADOURO BAIRRO CIDADE
+                MOVE SPACES TO UF LATITUDE LONGITUDE
                 DISPLAY TELACEP.
       
        LER-CEP.
-           ACCEPT (3, 19) CEP
+           ACCEPT TCEP
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02
                    CLOSE CEPS
@@ -152,12 +149,12 @@
                       DISPLAY TUF
                       DISPLAY TLATITUDE
                       DISPLAY TLONGITUDE
-                      MOVE "*** NOTA JÁ CADASTCEPDA ***" TO MENS
+                      MOVE "*** CEP JÁ CADASTRADO ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       MOVE 1 TO W-SEL
                       GO TO ACE-001
                    ELSE
-                      MOVE "ERRO NA LEITUCEP ARQUIVO CEPS"   TO MENS
+                      MOVE "ERRO NA LEITURA DO ARQUIVO CEPS"   TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
                 ELSE
@@ -165,54 +162,35 @@
       * "Rotinas" de leitura das variaveis
       * TODO: Corrigir as rotinas de leitura da variavel
       
-       LER-NOME.
-                ACCEPT (04, 19) NOME
+       LER-LOGRADOURO.
+                ACCEPT TLOGRADOURO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO LER-CEPS01.
+                IF W-ACT = 02 GO TO LER-BAIRRO.
        
-       LER-CEPS01.
-                ACCEPT (05, 19) NOTA1
+       LER-BAIRRO.
+                ACCEPT TBAIRRO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO LER-CEPS02.
+                IF W-ACT = 02 GO TO LER-CIDADE.
       
-       LER-CEPS02.
-                ACCEPT (06, 19) NOTA2
+       LER-CIDADE.
+                ACCEPT TCIDADE
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO CALC-MEDIA.
+                IF W-ACT = 02 GO TO LER-UF.
 
-       CALC-MEDIA.
-           COMPUTE MEDIA = (NOTA1 + NOTA2) / 2
-           DISPLAY(07, 19) MEDIA
-           GO TO LER-FALTAS01.
-
-       LER-FALTAS01.
-                ACCEPT (08, 19) FALTA1
+       LER-UF.
+                ACCEPT TUF
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO LER-FALTAS02.
+                IF W-ACT = 02 GO TO LER-LATITUDE.
 
-       LER-FALTAS02.
-                ACCEPT (09, 19) FALTA2
+       LER-LATITUDE.
+                ACCEPT TLATITUDE
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO CALC-TOTALFALTAS.
+                IF W-ACT = 02 GO TO TLONGITUDE
 
-       CALC-TOTALFALTAS.
-           COMPUTE TOTAL-FALTAS = (FALTA1 + FALTA2)
-           DISPLAY (10, 19) TOTAL-FALTAS.
-
-       SHOW-SITUACAO.
-           IF TOTAL-FALTAS > 20
-                IF MEDIA > 4 
-                        MOVE "RECUPECEPCAO - FALTAS" TO SITUACAO
-                ELSE
-                        MOVE "REPROVADO" TO SITUACAO
-           ELSE
-               IF MEDIA > 4
-                        MOVE "APROVADO" TO SITUACAO
-               ELSE
-                        MOVE "RECUPECEPCAO - CEPS" TO SITUACAO
-           
-           DISPLAY (15, 19) SITUACAO
-           IF W-SEL = 03 GO TO ALT-OPC.
+       LER-LONGITUDE.
+                ACCEPT TLONGITUDE
+                ACCEPT W-ACT FROM ESCAPE KEY
+                IF W-SEL = 03 GO TO ALT-OPC.
 
        INC-OPC.
                 MOVE "S" TO W-OPCAO
@@ -221,7 +199,7 @@
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO CLEAR-SCREEN.
                 IF W-OPCAO = "N" OR "n"
-                   MOVE "*** DADOS RECUSADOS PELO OPECEPDOR ***" TO MENS
+                   MOVE "*** DADOS RECUSADOS PELO OPERADOR ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO CLEAR-SCREEN.
                 IF W-OPCAO NOT = "S" AND "s"
@@ -232,16 +210,16 @@
        WRITE-REG.
            WRITE REGCEPS
            IF ST-ERRO = "00" OR "02"
-                MOVE "*** DADOS GCEPVADOS *** " TO MENS
+                MOVE "*** DADOS GRAVADOS *** " TO MENS
                 PERFORM ROT-MENS THRU ROT-MENS-FIM
                 GO TO CLEAR-SCREEN.
       * TODO: Ver exatamente o que esse numero magico "22" faz     
                 IF ST-ERRO = "22"
-                      MOVE "*** NOTA JA EXISTE ***       " TO MENS
+                      MOVE "*** CEP JA EXISTE ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO CLEAR-SCREEN
                 ELSE
-                      MOVE "ERRO NA GCEPVACAO DO ARQUIVO DE CEPS"
+                      MOVE "ERRO NA GRAVACAO DO ARQUIVO DE CEPS"
                                                        TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM.
@@ -289,12 +267,12 @@
                 GO TO ROT-FIM.
       *
        ALT-OPC.
-                DISPLAY (23, 40) "ALTECEPR  (S/N) : ".
+                DISPLAY (23, 40) "ALTERAR  (S/N) : ".
                 ACCEPT (23, 57) W-OPCAO
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO CLEAR-SCREEN.
                 IF W-OPCAO = "N" OR "n"
-                   MOVE "*** INFORMACOES NAO ALTECEPDAS *** " TO MENS
+                   MOVE "*** INFORMACOES NAO ALTERADAS *** " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO CLEAR-SCREEN.
                 IF W-OPCAO NOT = "S" AND "s"
@@ -304,7 +282,7 @@
        ALT-RW1.
            REWRITE REGCEPS
                 IF ST-ERRO = "00" OR "02"
-                   MOVE "*** REGISTRO ALTECEPDO ***         " TO MENS
+                   MOVE "*** REGISTRO ALTERADO ***         " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO CLEAR-SCREEN.
                 MOVE "ERRO NA EXCLUSAO DO REGISTRO CEPS"   TO MENS
