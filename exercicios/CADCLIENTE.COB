@@ -20,9 +20,23 @@
       *-----------------------------------------------------------------
        DATA DIVISION.
        FILE SECTION.
+       
+       FD CEPS
+               LABEL RECORD IS STANDARD
+               VALUE OF FILE-ID IS "CADCEPS.DAT".
+       01 REGCEPS.
+                03 CEP                  PIC 9(8).
+                03 LOGRADOURO           PIC X(35).
+                03 BAIRRO               PIC X(20).
+                03 CIDADE               PIC X(20).
+                03 UF                   PIC X(02).
+                03 LATITUDE             PIC X(20).
+                03 LONGITUDE            PIC X(20).
+        
        FD CLIENTES
                LABEL RECORD IS STANDARD
                VALUE OF FILE-ID IS "CADCLIENTES.DAT".
+       
        01 REGCLIENTES.
                 03 CPF                  PIC 9(11).
                 03 NOME                 PIC X(35).
@@ -50,62 +64,6 @@
        77 MENS         PIC X(50) VALUE SPACES.
        77 LIMPA        PIC X(50) VALUE SPACES.
       *-----------------------------------------------------------------
-      
-       SCREEN SECTION
-
-       01  TELACEP.
-           05  BLANK SCREEN.
-           05  LINE 02  COLUMN 01 
-               VALUE  "                               Cadastro".
-           05  LINE 02  COLUMN 41 
-               VALUE  "de Cep".
-           05  LINE 04  COLUMN 01 
-               VALUE  "    CEP:".
-           05  LINE 06  COLUMN 01 
-               VALUE  "    Logradouro:".
-           05  LINE 07  COLUMN 01 
-               VALUE  "    Bairro    :".
-           05  LINE 08  COLUMN 01 
-               VALUE  "    Cidade    :".
-           05  LINE 08  COLUMN 41 
-               VALUE  "  UF:".
-           05  LINE 10  COLUMN 01 
-               VALUE  "    Latitude  :".
-           05  LINE 11  COLUMN 01 
-               VALUE  "    Longitude :".
-           05  TCEP
-               LINE 04  COLUMN 10  PIC 99999.999
-               USING  CEP
-               HIGHLIGHT.
-           05  TLOGRADOURO
-               LINE 06  COLUMN 17  PIC X(35)
-               USING  LOGRADOURO
-               HIGHLIGHT.
-           05  TBAIRRO
-               LINE 07  COLUMN 17  PIC X(20)
-               USING  BAIRRO
-               HIGHLIGHT.
-           05  TCIDADE
-               LINE 08  COLUMN 17  PIC X(20)
-               USING  CIDADE
-               HIGHLIGHT.
-           05  TUF
-               LINE 08  COLUMN 47  PIC X(02)
-               USING  UF
-               HIGHLIGHT.
-           05  TLATITUDE
-               LINE 10  COLUMN 17  PIC X(20)
-               USING  LATITUDE
-               HIGHLIGHT.
-           05  TLONGITUDE
-               LINE 11  COLUMN 17  PIC X(20)
-               USING  LONGITUDE
-               HIGHLIGHT.
-           05  TMENS
-               LINE 15  COLUMN 13  PIC X(50)
-               USING  MENS
-               HIGHLIGHT.
-      *
        PROCEDURE DIVISION.
        INICIO.
 
@@ -115,23 +73,24 @@
                IF ST-ERRO = "30"
                       OPEN OUTPUT CLIENTES
                       CLOSE CLIENTES
-                      MOVE "*** ARQUIVO CLIENTES SENDO CRIADO **" TO MENS
+                      MOVE "* CRIANDO ARQUIVO CLIENTES *" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO INC-OP0
                    ELSE
-                      MOVE "ERRO NA ABERTURA DO ARQUIVO CLIENTES" TO MENS
+                      MOVE "ERRO NA ABERTURA DO ARQUIVO " TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
                 ELSE
                     NEXT SENTENCE.
        CLEAR-SCREEN.
-                MOVE ZEROS TO CEP 
-                MOVE SPACES TO LOGRADOURO BAIRRO CIDADE
-                MOVE SPACES TO UF LATITUDE LONGITUDE
-                DISPLAY TELACEP.
+                MOVE ZEROS  TO CPF DIA MES ANO RG CLICEP ENDNUM CEP
+                MOVE ZEROS  TO TELEFONE
+                MOVE SPACES TO NOME COMPLEMENTO SITUACAO
+      *          DISPLAY TELACLIENTE.
+      * TODO: CRIAR A TELA.
       
-       LER-CEP.
-           ACCEPT TCEP
+       LER-CPF.
+           ACCEPT TCPF
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02
                    CLOSE CLIENTES
@@ -142,7 +101,6 @@
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO LER-CEP.
        SHOW-DADOS.
-      * TODO: Criar função para a regra da situação do aluno
                 MOVE 0 TO W-SEL
                 READ CLIENTES
                 IF ST-ERRO NOT = "23"
