@@ -287,10 +287,9 @@
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO LER-DATANASC.
        
-      *TODO: Perguntar para o professor como pegar dados quando é
-      *partido assim pela tela do GTC 
        LER-DATANASC.
-      *          ACCEPT TNAME
+      *TODO: Ajustar a tela - Juntar os tres campos e deixar um só
+                ACCEPT TDATANASC
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO LER-RG.
        
@@ -324,9 +323,7 @@
                 IF W-ACT = 02 GO TO LER-TEL.
 
        LER-TEL.
-      *TODO: Perguntar para o professor como pegar dados quando é
-      *partido assim pela tela do GTC 
-      *          ACCEPT TLATITUDE
+                ACCEPT TTEL
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO LER-SITUACAO
 
