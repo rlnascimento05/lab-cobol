@@ -11,12 +11,21 @@
                          DECIMAL-POINT IS COMMA.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-       SELECT CLIENTES ASSIGN TO DISK
+
+      * NOTA: Por algum motivo, sempre que você tem 2 selects no mesmo
+      * arquivo elas tem que começar na coluna 12 ao inves da coluna 8
+      
+           SELECT CLIENTES ASSIGN TO DISK
                     ORGANIZATION IS INDEXED
                     ACCESS MODE  IS DYNAMIC
                     RECORD KEY   IS CPF
                     FILE STATUS  IS ST-ERRO.
-      *
+           
+           SELECT CEPS ASSIGN TO DISK
+                    ORGANIZATION IS INDEXED
+                    ACCESS MODE  IS DYNAMIC
+                    RECORD KEY   IS CEP
+                    FILE STATUS  IS ST-ERRO.
       *-----------------------------------------------------------------
        DATA DIVISION.
        FILE SECTION.
@@ -33,9 +42,12 @@
                 03 BAIRRO               PIC X(20).
                 03 CIDADE               PIC X(20).
                 03 UF                   PIC X(02).
-                03 LATITUDE             PIC X(20).
-                03 LONGITUDE            PIC X(20).
-        
+      *         03 LATITUDE             PIC X(20).
+      *         03 LONGITUDE            PIC X(20).
+      * NOTA: Eu comentei as variaveis acima pq eu não sei se
+      * eu vou precisar delas ou não
+      *
+
        FD CLIENTES
                LABEL RECORD IS STANDARD
                VALUE OF FILE-ID IS "CADCLIENTES.DAT".
@@ -64,12 +76,124 @@
        01 MASC2        PIC ZZZZ.ZZZ.ZZ9,99.
        77 W-SEL        PIC 9(01) VALUE ZEROS.
        77 W-CONT       PIC 9(06) VALUE ZEROS.
-       77 W-OPCAO      PIC X(01) VALUE SPACES.
+       77 TOPTION      PIC X(01) VALUE SPACES.
        77 ST-ERRO      PIC X(02) VALUE "00".
        77 W-ACT        PIC 9(02) VALUE ZEROS.
        77 MENS         PIC X(50) VALUE SPACES.
        77 LIMPA        PIC X(50) VALUE SPACES.
       *-----------------------------------------------------------------
+
+       SCREEN SECTION     
+       
+       01  TELACLIENTE.
+           05  BLANK SCREEN.
+           05  LINE 02  COLUMN 01 
+               VALUE  "                            CADASTRO DE".
+           05  LINE 02  COLUMN 41 
+               VALUE  "CLIENTE".
+           05  LINE 04  COLUMN 01 
+               VALUE  "  CPF:                             NOME:".
+           05  LINE 05  COLUMN 01 
+               VALUE  "  RG :                             DATA".
+           05  LINE 05  COLUMN 41 
+               VALUE  "NASCIMENTO:   -  -".
+           05  LINE 07  COLUMN 01 
+               VALUE  "  CEP:           LOGRADOURO:".
+           05  LINE 07  COLUMN 41 
+               VALUE  "                           N:".
+           05  LINE 08  COLUMN 01 
+               VALUE  "  BAIRRO:                      CIDADE:".
+           05  LINE 08  COLUMN 41 
+               VALUE  "                          UF:".
+           05  LINE 09  COLUMN 01 
+               VALUE  "  COMPLEMENTO:".
+           05  LINE 11  COLUMN 01 
+               VALUE  "  EMAIL:".
+           05  LINE 11  COLUMN 41 
+               VALUE  "         TELEFONE: (  )".
+           05  LINE 12  COLUMN 01 
+               VALUE  "  SITUAAO:".
+           05  TCPF
+               LINE 04  COLUMN 08  PIC 999.999.999.99
+               USING  CPF
+               HIGHLIGHT.
+           05  TNOME
+               LINE 04  COLUMN 42  PIC X(35)
+               USING  NOME
+               HIGHLIGHT.
+           05  TRG
+               LINE 05  COLUMN 08  PIC 9(20)
+               USING  RG
+               HIGHLIGHT.
+           05  TDIA
+               LINE 05  COLUMN 53  PIC 9(02)
+               USING  DIA
+               HIGHLIGHT.
+           05  TMES
+               LINE 05  COLUMN 56  PIC 9(02)
+               USING  MES
+               HIGHLIGHT.
+           05  TANO
+               LINE 05  COLUMN 59  PIC 9(04)
+               USING  ANO
+               HIGHLIGHT.
+           05  TCEP
+               LINE 07  COLUMN 08  PIC 99999.999
+               USING  CLICEP
+               HIGHLIGHT.
+           05  TLOGR
+               LINE 07  COLUMN 30  PIC X(35)
+               USING  LOGRADOURO
+               HIGHLIGHT.
+           05  TENDNUM
+               LINE 07  COLUMN 71  PIC 9(04)
+               USING  ENDNUM
+               HIGHLIGHT.
+           05  TBAIRRO
+               LINE 08  COLUMN 11  PIC X(20)
+               USING  BAIRRO
+               HIGHLIGHT.
+           05  TCIDADE
+               LINE 08  COLUMN 40  PIC X(20)
+               USING  CIDADE
+               HIGHLIGHT.
+           05  TUF
+               LINE 08  COLUMN 71  PIC X(02)
+               USING  UF
+               HIGHLIGHT.
+           05  TCOMPL
+               LINE 09  COLUMN 16  PIC X(12)
+               USING  COMPLEMENTO
+               HIGHLIGHT.
+           05  TEMAIL
+               LINE 11  COLUMN 10  PIC X(35)
+               USING  EMAIL
+               HIGHLIGHT.
+           05  TDDD
+               LINE 11  COLUMN 61  PIC 9(02)
+               USING  DDD
+               HIGHLIGHT.
+           05  TTELNUM
+               LINE 11  COLUMN 65  PIC 99999.9999
+               USING  TELNUM
+               HIGHLIGHT.
+           05  TSITUACAO
+               LINE 12  COLUMN 13  PIC X(01)
+               USING  SITUACAO
+               HIGHLIGHT.
+           05  TSITDESC
+               LINE 12  COLUMN 15  PIC X(10)
+               USING  SITDESC
+               HIGHLIGHT.
+           05  TMENS
+               LINE 19  COLUMN 25  PIC X(35)
+               USING  MENS.
+           05  TOPTION
+               LINE 19  COLUMN 62  PIC X(1)
+               USING  OPTION.
+       
+      *-----------------------------------------------------------------
+       
        PROCEDURE DIVISION.
        INICIO.
 
@@ -92,9 +216,9 @@
                 MOVE ZEROS  TO CPF DIA MES ANO RG CLICEP ENDNUM CEP
                 MOVE ZEROS  TO TELEFONE
                 MOVE SPACES TO NOME COMPLEMENTO SITUACAO
-      *          DISPLAY TELACLIENTE.
-      * TODO: CRIAR A TELA.
-      
+                DISPLAY TELACLIENTE.
+
+      *------------------------------------------------------------
        LER-CPF.
            ACCEPT TCPF
                 ACCEPT W-ACT FROM ESCAPE KEY
@@ -102,11 +226,31 @@
                    CLOSE CLIENTES
                    GO TO ROT-FIM.
            
-                IF CEP = SPACES
-                   MOVE "*** CEP INVALIDO ***" TO MENS
+                IF CPF = SPACES
+                   MOVE "*** CPF INVALIDO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO LER-CEP.
-       SHOW-DADOS.
+                   GO TO LER-CPF.
+       
+      *-------------------------------------------------------------
+      * rotinas de leituras das chaves (cliente e cep)
+       SHOW-DADOS-CEP.
+                MOVE CLICEP TO CEP
+                READ CEPS
+                IF ST-ERRO NOT = "23"
+                   IF ST-ERRO = "00"
+                      DISPLAY TLOGR 
+                      DISPLAY TBAIRRO
+                      DISPLAY TCIDADE
+                      DISPLAY TUF
+                   ELSE
+                      MOVE "ERRO NA LEITURA DO CEP"   TO MENS
+                      PERFORM ROT-MENS THRU ROT-MENS-FIM
+                      GO TO LER-CEP
+                ELSE
+                   NEXT SENTENCE.
+       
+       
+       SHOW-DADOS-CLI.
                 MOVE 0 TO W-SEL
                 READ CLIENTES
                 IF ST-ERRO NOT = "23"
@@ -118,63 +262,97 @@
                       DISPLAY TUF
                       DISPLAY TLATITUDE
                       DISPLAY TLONGITUDE
-                      MOVE "*** CEP JÁ CADASTRADO ***" TO MENS
+
+                      PERFORM SHOW-DADOS-CEP
+                      MOVE "* CLIENTE JÁ CADASTRADO *" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       MOVE 1 TO W-SEL
                       GO TO ACE-001
-                   ELSE
-                      MOVE "ERRO NA LEITURA DO ARQUIVO CLIENTES"   TO MENS
+                   ELSE:
+                      MOVE "ERRO NO ARQUIVO CLIENTES"   TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
                 ELSE
                    NEXT SENTENCE.
+
+      *-------------------------------------------------------------
+      
+      
+      *-------------------------------------------------------------
       * "Rotinas" de leitura das variaveis
       * TODO: Corrigir as rotinas de leitura da variavel
       
-       LER-LOGRADOURO.
-                ACCEPT TLOGRADOURO
+       LER-NAME.
+                ACCEPT TNAME
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO LER-BAIRRO.
+                IF W-ACT = 02 GO TO LER-DATANASC.
        
-       LER-BAIRRO.
-                ACCEPT TBAIRRO
+      *TODO: Perguntar para o professor como pegar dados quando é
+      *partido assim pela tela do GTC 
+       LER-DATANASC.
+      *          ACCEPT TNAME
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO LER-CIDADE.
+                IF W-ACT = 02 GO TO LER-RG.
+       
+       LER-RG.
+                ACCEPT TRG
+                ACCEPT W-ACT FROM ESCAPE KEY
+                IF W-ACT = 02 GO TO LER-CEP.
+       
+       LER-CEP.
+           ACCEPT TCEP
+           IF CLICEP = SPACES
+               MOVE "*** CEP INVALIDO ***" TO MENS
+               PERFORM ROT-MENS THRU ROT-MENS-FIM
+               GO TO LER-CEP.
+           ELSE
+              PERFORM SHOW-DADOS-CEP
+       
+       LER-ENDNUM.
+                ACCEPT TENDNUM
+                ACCEPT W-ACT FROM ESCAPE KEY
+                IF W-ACT = 02 GO TO LER-COMPL.
       
-       LER-CIDADE.
-                ACCEPT TCIDADE
+       LER-COMPL.
+                ACCEPT TCOMPL
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO LER-UF.
+                IF W-ACT = 02 GO TO LER-EMAIL.
 
-       LER-UF.
-                ACCEPT TUF
+       LER-EMAIL.
+                ACCEPT TEMAIL
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO LER-LATITUDE.
+                IF W-ACT = 02 GO TO LER-TEL.
 
-       LER-LATITUDE.
-                ACCEPT TLATITUDE
+       LER-TEL.
+      *TODO: Perguntar para o professor como pegar dados quando é
+      *partido assim pela tela do GTC 
+      *          ACCEPT TLATITUDE
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO TLONGITUDE
+                IF W-ACT = 02 GO TO LER-SITUACAO
 
-       LER-LONGITUDE.
-                ACCEPT TLONGITUDE
+       LER-SITUACAO.
+                ACCEPT TSITUACAO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-SEL = 03 GO TO ALT-OPC.
+                IF W-SEL = 03 GO TO ALTER-REG.
 
-       INC-OPC.
-                MOVE "S" TO W-OPCAO
-                DISPLAY (23, 40) "DADOS OK (S/n) : ".
-                ACCEPT (23, 57) W-OPCAO WITH UPDATE
+       
+      *-------------------------------------------------------------
+       
+       FINISH-NEW-REG.
+                MOVE "S" TO TOPTION
+                MOVE "DADOS OK (S/n) : " TO MENS
+                DISPLAY TMENS
+                ACCEPT TOPTION WITH UPDATE
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO CLEAR-SCREEN.
-                IF W-OPCAO = "N" OR "n"
+                IF OPTION = "N" OR "n"
                    MOVE "*** DADOS RECUSADOS PELO OPERADOR ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO CLEAR-SCREEN.
-                IF W-OPCAO NOT = "S" AND "s"
+                IF OPTION NOT = "S" AND "s"
                    MOVE "*** DIGITE APENAS S=SIM e N=NAO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-OPC.
+                   GO TO FINISH-NEW-REG.
       * Rotina de Escrita
        WRITE-REG.
            WRITE REGCLIENTES
@@ -194,18 +372,18 @@
                       GO TO ROT-FIM.
       *
       *****************************************
-      * ROTINA DE CONSULTA/ALTECEPCAO/EXCLUSAO *
+      * ROTINA DE CONSULTA/ALTERACAO/EXCLUSAO *
       *****************************************
       *
        ACE-001.
-                DISPLAY (23, 12)
-                     "F1=NOVO REGISTRO   F2=ALTECEPR   F3=EXCLUIR"
-                ACCEPT (23, 55) W-OPCAO
+                MOVE "F1=NOVO REGISTRO  F2=ALTERAR  F3=EXCLUIR" TO MENS
+                DISPLAY TMENS
+                ACCEPT TOPTION
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT NOT = 02 AND W-ACT NOT = 03 AND W-ACT NOT = 04
                    GO TO ACE-001.
                 MOVE SPACES TO MENS
-                DISPLAY (23, 12) MENS
+                DISPLAY TMENS
                 IF W-ACT = 02
                    MOVE 02 TO W-SEL
                    GO TO CLEAR-SCREEN.
@@ -215,17 +393,18 @@
                   GO TO ALT-OPC.
       *
        EXC-OPC.
-                DISPLAY (23, 40) "EXCLUIR   (S/N) : ".
-                ACCEPT (23, 57) W-OPCAO
-                IF W-OPCAO = "N" OR "n"
+                MOVE "EXCLUIR   (S/N) : " TO MENS
+                DISPLAY TMENS
+                ACCEPT TOPTION
+                IF OPTION = "N" OR "n"
                    MOVE "*** REGISTRO NAO EXCLUIDO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO CLEAR-SCREEN.
-                IF W-OPCAO NOT = "S" AND "s"
+                IF OPTION NOT = "S" AND "s"
                    MOVE "*** DIGITE APENAS S=SIM  e  N=NAO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO EXC-OPC.
-       EXC-DL1.
+       DELETE-REG.
                 DELETE CLIENTES RECORD
                 IF ST-ERRO = "00"
                    MOVE "*** REGISTRO EXCLUIDO ***           " TO MENS
@@ -235,20 +414,21 @@
                 PERFORM ROT-MENS THRU ROT-MENS-FIM
                 GO TO ROT-FIM.
       *
-       ALT-OPC.
-                DISPLAY (23, 40) "ALTERAR  (S/N) : ".
-                ACCEPT (23, 57) W-OPCAO
+       ALTER-REG.
+                MOVE "ALTERAR  (S/N) : " TO MENS
+                DISPLAY TMENS
+                ACCEPT TOPTION
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO CLEAR-SCREEN.
-                IF W-OPCAO = "N" OR "n"
+                IF OPTION = "N" OR "n"
                    MOVE "*** INFORMACOES NAO ALTERADAS *** " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO CLEAR-SCREEN.
-                IF W-OPCAO NOT = "S" AND "s"
+                IF OPTION NOT = "S" AND "s"
                    MOVE "*** DIGITE APENAS S=SIM  e  N=NAO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO ALT-OPC.
-       ALT-RW1.
+       REWRITE-REG.
            REWRITE REGCLIENTES
                 IF ST-ERRO = "00" OR "02"
                    MOVE "*** REGISTRO ALTERADO ***         " TO MENS
