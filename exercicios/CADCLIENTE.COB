@@ -24,6 +24,9 @@
        FD CEPS
                LABEL RECORD IS STANDARD
                VALUE OF FILE-ID IS "CADCEPS.DAT".
+      * Esse cara é de outro programa, tenho que verificar se as
+      * variaveis estão compativeis.
+      *
        01 REGCEPS.
                 03 CEP                  PIC 9(8).
                 03 LOGRADOURO           PIC X(35).
@@ -48,7 +51,10 @@
                 03 CLICEP               PIC 9(08).
                 03 ENDNUM               PIC 9(4).
                 03 COMPLEMENTO          PIC X(12).
-                03 TELEFONE             PIC 9(11).
+                03 EMAIL                PIC X(35).
+                03 TELEFONE             
+                   05 DDD               PIC 9(02).
+                   05 TELNUM            PIC 9(9).       
                 03 SITUACAO             PIC X(1).
       *-----------------------------------------------------------------
        WORKING-STORAGE SECTION.
