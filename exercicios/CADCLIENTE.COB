@@ -267,7 +267,7 @@
                       MOVE "* CLIENTE JÁ CADASTRADO *" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       MOVE 1 TO W-SEL
-                      GO TO ACE-001
+                      GO TO ALTER-REG-OP
                    ELSE:
                       MOVE "ERRO NO ARQUIVO CLIENTES"   TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
@@ -375,13 +375,13 @@
       * ROTINA DE CONSULTA/ALTERACAO/EXCLUSAO *
       *****************************************
       *
-       ACE-001.
+       ALTER-REG-OP.
                 MOVE "F1=NOVO REGISTRO  F2=ALTERAR  F3=EXCLUIR" TO MENS
                 DISPLAY TMENS
                 ACCEPT TOPTION
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT NOT = 02 AND W-ACT NOT = 03 AND W-ACT NOT = 04
-                   GO TO ACE-001.
+                   GO TO ALTER-REG-OP.
                 MOVE SPACES TO MENS
                 DISPLAY TMENS
                 IF W-ACT = 02
@@ -389,10 +389,10 @@
                    GO TO CLEAR-SCREEN.
                 IF W-ACT = 03
                   MOVE 03 TO W-SEL      
-                  PERFORM LER-NOME THRU SHOW-SITUACAO
-                  GO TO ALT-OPC.
+                  PERFORM LER-NOME THRU LER-SITUACAO
+                  GO TO ALTER-REG.
       *
-       EXC-OPC.
+       DELETE-REG-OP.
                 MOVE "EXCLUIR   (S/N) : " TO MENS
                 DISPLAY TMENS
                 ACCEPT TOPTION
@@ -403,7 +403,7 @@
                 IF OPTION NOT = "S" AND "s"
                    MOVE "*** DIGITE APENAS S=SIM  e  N=NAO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO EXC-OPC.
+                   GO TO DELETE-REG-OP.
        DELETE-REG.
                 DELETE CLIENTES RECORD
                 IF ST-ERRO = "00"
@@ -427,14 +427,14 @@
                 IF OPTION NOT = "S" AND "s"
                    MOVE "*** DIGITE APENAS S=SIM  e  N=NAO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO ALT-OPC.
+                   GO TO ALTER-REG.
        REWRITE-REG.
            REWRITE REGCLIENTES
                 IF ST-ERRO = "00" OR "02"
                    MOVE "*** REGISTRO ALTERADO ***         " TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
                    GO TO CLEAR-SCREEN.
-                MOVE "ERRO NA EXCLUSAO DO REGISTRO CLIENTES"   TO MENS
+                MOVE "ERRO NA REESCRITA DO REGISTRO CLIENTES"   TO MENS
                 PERFORM ROT-MENS THRU ROT-MENS-FIM
                 GO TO ROT-FIM.
       *
