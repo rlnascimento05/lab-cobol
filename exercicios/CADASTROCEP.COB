@@ -1,12 +1,12 @@
        IDENTIFICATION DIVISION.
-       PROGCEPM-ID. CADASTROCEP
+       PROGRAM-ID. CADASTROCEP
        AUTHOR. RICARDO DE LUCAS DO NASCIMENTO.
       **************************************
       * MANUTENCAO DO CADASTRO DE CEP      *
       **************************************
       *----------------------------------------------------------------
        ENVIRONMENT DIVISION.
-       CONFIGUCEPTION SECTION.
+       CONFIGURATION SECTION.
        SPECIAL-NAMES.
                          DECIMAL-POINT IS COMMA.
        INPUT-OUTPUT SECTION.

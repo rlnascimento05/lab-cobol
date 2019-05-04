@@ -1,12 +1,12 @@
        IDENTIFICATION DIVISION.
-       PROGCEPM-ID. CADCLIENTE
+       PROGRAM-ID. CADCLI
        AUTHOR. RICARDO DE LUCAS DO NASCIMENTO.
       **************************************
       * MANUTENCAO DO CADASTRO DE CLIENTES *
       **************************************
       *----------------------------------------------------------------
        ENVIRONMENT DIVISION.
-       CONFIGUCEPTION SECTION.
+       CONFIGURATION SECTION.
        SPECIAL-NAMES.
                          DECIMAL-POINT IS COMMA.
        INPUT-OUTPUT SECTION.
@@ -55,7 +55,7 @@
        01 REGCLIENTES.
                 03 CPF                  PIC 9(11).
                 03 NOME                 PIC X(35).
-                03 DATANASC             
+                03 DATANASC.             
                     05 DIA              PIC 9(2).
                     05 MES              PIC 9(2).
                     05 ANO              PIC 9(4).
@@ -64,7 +64,7 @@
                 03 ENDNUM               PIC 9(4).
                 03 COMPLEMENTO          PIC X(12).
                 03 EMAIL                PIC X(35).
-                03 TELEFONE             
+                03 TELEFONE.             
                    05 DDD               PIC 9(02).
                    05 TELNUM            PIC 9(9).       
                 03 SITUACAO             PIC X(1).
@@ -81,6 +81,7 @@
        77 W-ACT        PIC 9(02) VALUE ZEROS.
        77 MENS         PIC X(50) VALUE SPACES.
        77 LIMPA        PIC X(50) VALUE SPACES.
+
       *-----------------------------------------------------------------
 
        SCREEN SECTION     
@@ -181,12 +182,12 @@
                LINE 12  COLUMN 13  PIC X(01)
                USING  SITUACAO
                HIGHLIGHT.
-           05  TSITDESC
-               LINE 12  COLUMN 15  PIC X(10)
-               USING  SITDESC
-               HIGHLIGHT.
+      *05  TSITDESC
+      *        LINE 12  COLUMN 15  PIC X(10)
+      *        USING  SITDESC
+      *        HIGHLIGHT.
            05  TMENS
-               LINE 19  COLUMN 25  PIC X(35)
+               LINE 19  COLUMN 25  PIC X(50)
                USING  MENS.
            05  TOPTION
                LINE 19  COLUMN 62  PIC X(1)
