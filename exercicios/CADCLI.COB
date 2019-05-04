@@ -33,20 +33,13 @@
        FD CEPS
                LABEL RECORD IS STANDARD
                VALUE OF FILE-ID IS "CADCEPS.DAT".
-      * Esse cara é de outro programa, tenho que verificar se as
-      * variaveis estão compativeis.
-      *
+       
        01 REGCEPS.
                 03 CEP                  PIC 9(8).
                 03 LOGRADOURO           PIC X(35).
                 03 BAIRRO               PIC X(20).
                 03 CIDADE               PIC X(20).
                 03 UF                   PIC X(02).
-      *         03 LATITUDE             PIC X(20).
-      *         03 LONGITUDE            PIC X(20).
-      * NOTA: Eu comentei as variaveis acima pq eu não sei se
-      * eu vou precisar delas ou não
-      *
 
        FD CLIENTES
                LABEL RECORD IS STANDARD
@@ -76,7 +69,7 @@
        01 MASC2        PIC ZZZZ.ZZZ.ZZ9,99.
        77 W-SEL        PIC 9(01) VALUE ZEROS.
        77 W-CONT       PIC 9(06) VALUE ZEROS.
-       77 TOPTION      PIC X(01) VALUE SPACES.
+       77 OPTION      PIC X(01) VALUE SPACES.
        77 ST-ERRO      PIC X(02) VALUE "00".
        77 W-ACT        PIC 9(02) VALUE ZEROS.
        77 MENS         PIC X(50) VALUE SPACES.
@@ -84,7 +77,7 @@
 
       *-----------------------------------------------------------------
 
-       SCREEN SECTION     
+       SCREEN SECTION.     
        
        01  TELACLIENTE.
            05  BLANK SCREEN.
@@ -257,19 +250,17 @@
                 IF ST-ERRO NOT = "23"
                    IF ST-ERRO = "00"
                       DISPLAY TCEP
-                      DISPLAY TLOGRADOURO 
+                      DISPLAY TLOGR
                       DISPLAY TBAIRRO
                       DISPLAY TCIDADE
                       DISPLAY TUF
-                      DISPLAY TLATITUDE
-                      DISPLAY TLONGITUDE
 
                       PERFORM SHOW-DADOS-CEP
                       MOVE "* CLIENTE JÁ CADASTRADO *" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       MOVE 1 TO W-SEL
                       GO TO ALTER-REG-OP
-                   ELSE:
+                   ELSE
                       MOVE "ERRO NO ARQUIVO CLIENTES"   TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
@@ -283,8 +274,8 @@
       * "Rotinas" de leitura das variaveis
       * TODO: Corrigir as rotinas de leitura da variavel
       
-       LER-NAME.
-                ACCEPT TNAME
+       LER-NOME.
+                ACCEPT TNOME
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO LER-DATANASC.
        
@@ -304,9 +295,9 @@
            IF CLICEP = SPACES
                MOVE "*** CEP INVALIDO ***" TO MENS
                PERFORM ROT-MENS THRU ROT-MENS-FIM
-               GO TO LER-CEP.
+               GO TO LER-CEP
            ELSE
-              PERFORM SHOW-DADOS-CEP
+               PERFORM SHOW-DADOS-CEP.
        
        LER-ENDNUM.
                 ACCEPT TENDNUM
@@ -326,7 +317,7 @@
        LER-TEL.
                 ACCEPT TTEL
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO LER-SITUACAO
+                IF W-ACT = 02 GO TO LER-SITUACAO.
 
        LER-SITUACAO.
                 ACCEPT TSITUACAO
@@ -337,16 +328,16 @@
       *-------------------------------------------------------------
        
        FINISH-NEW-REG.
-                MOVE "S" TO TOPTION
+                MOVE "S" TO OPTION
                 MOVE "DADOS OK (S/n) : " TO MENS
                 DISPLAY TMENS
-                ACCEPT TOPTION WITH UPDATE
+                ACCEPT TOPTION
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO CLEAR-SCREEN.
+                IF W-ACT = 02 GO TO CLEAR-SCREEN
                 IF OPTION = "N" OR "n"
                    MOVE "*** DADOS RECUSADOS PELO OPERADOR ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO CLEAR-SCREEN.
+                   GO TO CLEAR-SCREEN
                 IF OPTION NOT = "S" AND "s"
                    MOVE "*** DIGITE APENAS S=SIM e N=NAO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
@@ -441,12 +432,14 @@
       **********************
       *
        ROT-FIM.
-                DISPLAY (01, 01) ECLIENTESE
-                EXIT PROGCEPM.
+                DISPLAY (01, 01) ERASE
+                EXIT PROGRAM.
        ROT-FIMP.
-                EXIT PROGCEPM.
+                EXIT PROGRAM.
 
        ROT-FIMS.
+                CLOSE CEPS
+                CLOSE CLIENTES
                 STOP RUN.
       *
       **********************
@@ -456,11 +449,11 @@
        ROT-MENS.
                 MOVE ZEROS TO W-CONT.
        ROT-MENS1.
-               DISPLAY TMENS.
+                DISPLAY TMENS.
        ROT-MENS2.
                 ADD 1 TO W-CONT
                 IF W-CONT < 1500
-                   GO TO ROT-MENS2
+                        GO TO ROT-MENS2.
        ROT-MENS-FIM.
                 EXIT.
        ROT-ALFA-FIM.
