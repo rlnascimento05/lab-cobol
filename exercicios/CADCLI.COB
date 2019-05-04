@@ -52,7 +52,7 @@
                     05 DIA              PIC 9(2).
                     05 MES              PIC 9(2).
                     05 ANO              PIC 9(4).
-                03 RG                   PIC 9(20).
+                03 RG                   PIC X(20).
                 03 CLICEP               PIC 9(08).
                 03 ENDNUM               PIC 9(4).
                 03 COMPLEMENTO          PIC X(12).
@@ -116,7 +116,7 @@
                USING  NOME
                HIGHLIGHT.
            05  TRG
-               LINE 05  COLUMN 08  PIC 9(20)
+               LINE 05  COLUMN 08  PIC X(20)
                USING  RG
                HIGHLIGHT.
            05  TDATANASC
