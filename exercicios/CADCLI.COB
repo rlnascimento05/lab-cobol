@@ -90,7 +90,7 @@
            05  LINE 05  COLUMN 01 
                VALUE  "  RG :                             DATA".
            05  LINE 05  COLUMN 41 
-               VALUE  "NASCIMENTO:   -  -".
+               VALUE  "NASCIMENTO:".
            05  LINE 07  COLUMN 01 
                VALUE  "  CEP:           LOGRADOURO:".
            05  LINE 07  COLUMN 41 
@@ -119,17 +119,9 @@
                LINE 05  COLUMN 08  PIC 9(20)
                USING  RG
                HIGHLIGHT.
-           05  TDIA
-               LINE 05  COLUMN 53  PIC 9(02)
-               USING  DIA
-               HIGHLIGHT.
-           05  TMES
-               LINE 05  COLUMN 56  PIC 9(02)
-               USING  MES
-               HIGHLIGHT.
-           05  TANO
-               LINE 05  COLUMN 59  PIC 9(04)
-               USING  ANO
+           05  TDATANASC
+               LINE 05  COLUMN 53  PIC 99.99.9999
+               USING  DATANASC
                HIGHLIGHT.
            05  TCEP
                LINE 07  COLUMN 08  PIC 99999.999
@@ -178,7 +170,7 @@
       *05  TSITDESC
       *        LINE 12  COLUMN 15  PIC X(10)
       *        USING  SITDESC
-      *        HIGHLIGHT.
+      *         HIGHLIGHT.
            05  TMENS
                LINE 19  COLUMN 25  PIC X(50)
                USING  MENS.
