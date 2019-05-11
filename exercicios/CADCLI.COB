@@ -183,7 +183,7 @@
        PROCEDURE DIVISION.
        INICIO.
 
-       INC-OP0.
+       OPEN-CLI.
            OPEN I-O CLIENTES
            IF ST-ERRO NOT = "00"
                IF ST-ERRO = "30"
@@ -191,13 +191,20 @@
                       CLOSE CLIENTES
                       MOVE "* CRIANDO ARQUIVO CLIENTES *" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
-                      GO TO INC-OP0
+                      GO TO OPEN-CLI
                    ELSE
                       MOVE "ERRO NA ABERTURA DO ARQUIVO " TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
                 ELSE
                     NEXT SENTENCE.
+       OPEN-CEP.
+           OPEN I-O CEPS
+           IF ST-ERRO NOT = "00"
+              MOVE "ERRO NA ABERTURA DO ARQUIVO " TO MENS
+              PERFORM ROT-MENS THRU ROT-MENS-FIM
+              GO TO ROT-FIM.
+
        CLEAR-SCREEN.
                 MOVE ZEROS  TO CPF DIA MES ANO RG CLICEP ENDNUM CEP
                 MOVE ZEROS  TO TELEFONE
@@ -218,39 +225,18 @@
                    GO TO LER-CPF.
        
       *-------------------------------------------------------------
-      * rotinas de leituras das chaves (cliente e cep)
-       SHOW-DADOS-CEP.
-                MOVE CLICEP TO CEP
-                READ CEPS
-                IF ST-ERRO NOT = "23"
-                   IF ST-ERRO = "00"
-                      DISPLAY TLOGR 
-                      DISPLAY TBAIRRO
-                      DISPLAY TCIDADE
-                      DISPLAY TUF
-                   ELSE
-                      MOVE "ERRO NA LEITURA DO CEP"   TO MENS
-                      PERFORM ROT-MENS THRU ROT-MENS-FIM
-                      GO TO LER-CEP
-                ELSE
-                   NEXT SENTENCE.
-       
        
        SHOW-DADOS-CLI.
                 MOVE 0 TO W-SEL
                 READ CLIENTES
                 IF ST-ERRO NOT = "23"
                    IF ST-ERRO = "00"
-                      DISPLAY TCEP
-                      DISPLAY TLOGR
-                      DISPLAY TBAIRRO
-                      DISPLAY TCIDADE
-                      DISPLAY TUF
-
-                      PERFORM SHOW-DADOS-CEP
-                      MOVE "* CLIENTE JÁ CADASTRADO *" TO MENS
-                      PERFORM ROT-MENS THRU ROT-MENS-FIM
                       MOVE 1 TO W-SEL
+                      PERFORM SHOW-DADOS-CEP
+                      DISPLAY TELACLIENTE
+
+                      MOVE "* CLIENTE JA CADASTRADO *" TO MENS
+                      PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ALTER-REG-OP
                    ELSE
                       MOVE "ERRO NO ARQUIVO CLIENTES"   TO MENS
@@ -258,13 +244,8 @@
                       GO TO ROT-FIM
                 ELSE
                    NEXT SENTENCE.
-
-      *-------------------------------------------------------------
       
-      
-      *-------------------------------------------------------------
       * "Rotinas" de leitura das variaveis
-      * TODO: Corrigir as rotinas de leitura da variavel
       
        LER-NOME.
                 ACCEPT TNOME
@@ -272,7 +253,6 @@
                 IF W-ACT = 02 GO TO LER-DATANASC.
        
        LER-DATANASC.
-      *TODO: Ajustar a tela - Juntar os tres campos e deixar um só
                 ACCEPT TDATANASC
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO LER-RG.
@@ -287,10 +267,25 @@
            IF CLICEP = SPACES
                MOVE "*** CEP INVALIDO ***" TO MENS
                PERFORM ROT-MENS THRU ROT-MENS-FIM
-               GO TO LER-CEP
-           ELSE
-               PERFORM SHOW-DADOS-CEP.
+               GO TO LER-CEP.
        
+       SHOW-DADOS-CEP.
+                MOVE CLICEP TO CEP
+                READ CEPS
+                IF ST-ERRO NOT = "23"
+                   IF ST-ERRO = "00"
+                      DISPLAY TELACLIENTE 
+                   ELSE
+                      MOVE "ERRO NA LEITURA DO CEP"   TO MENS
+                      PERFORM ROT-MENS THRU ROT-MENS-FIM
+                      MOVE ST-ERRO  TO MENS
+                      PERFORM ROT-MENS THRU ROT-MENS-FIM
+                      GO TO ROT-FIM
+                ELSE
+                   IF W-SEL = 1
+                      MOVE ALL "*" TO LOGRADOURO BAIRRO CIDADE UF
+                   ELSE
+                      GO TO LER-CEP.
        LER-ENDNUM.
                 ACCEPT TENDNUM
                 ACCEPT W-ACT FROM ESCAPE KEY
