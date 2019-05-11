@@ -185,7 +185,7 @@
        LER-LATITUDE.
                 ACCEPT TLATITUDE
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO TLONGITUDE
+                IF W-ACT = 02 GO TO LER-LONGITUDE.
 
        LER-LONGITUDE.
                 ACCEPT TLONGITUDE
@@ -242,7 +242,7 @@
                    GO TO CLEAR-SCREEN.
                 IF W-ACT = 03
                   MOVE 03 TO W-SEL      
-                  PERFORM LER-NOME THRU SHOW-SITUACAO
+                  PERFORM LER-LOGRADOURO THRU LER-LONGITUDE 
                   GO TO ALT-OPC.
       *
        EXC-OPC.
@@ -294,10 +294,10 @@
       **********************
       *
        ROT-FIM.
-                DISPLAY (01, 01) ECEPSE
-                EXIT PROGCEPM.
+                DISPLAY (01, 01) ERASE
+                EXIT PROGRAM.
        ROT-FIMP.
-                EXIT PROGCEPM.
+                EXIT PROGRAM.
 
        ROT-FIMS.
                 STOP RUN.
@@ -313,7 +313,7 @@
        ROT-MENS2.
                 ADD 1 TO W-CONT
                 IF W-CONT < 1500
-                   GO TO ROT-MENS2
+                   GO TO ROT-MENS2.
        ROT-MENS-FIM.
                 EXIT.
        ROT-ALFA-FIM.

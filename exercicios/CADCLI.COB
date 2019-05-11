@@ -307,7 +307,7 @@
                 IF W-ACT = 02 GO TO LER-TEL.
 
        LER-TEL.
-                ACCEPT TTEL
+                ACCEPT TTELNUM
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02 GO TO LER-SITUACAO.
 
