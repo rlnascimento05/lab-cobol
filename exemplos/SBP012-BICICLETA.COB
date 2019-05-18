@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. OCP038.
+       PROGRAM-ID. SBP012.
       *******************************
       * CONSULTA DE BICICLETA       *
       *******************************
@@ -49,10 +49,9 @@
        01 MENS         PIC X(50) VALUE SPACES.
        01 LIMPA        PIC X(55) VALUE SPACES.
        01 SOLIC        PIC X(20) VALUE SPACES.
-       01 W-OCA001     PIC X(40) VALUE "OCA001.DAT                    ".
        01 CONLIN       PIC 9(03) VALUE 001.
-       01 OCW03801     PIC 9(06) VALUE ZEROS.
-       01 OCW03802     PIC X(35) VALUE SPACES.
+       01 W-NUMERO     PIC 9(06) VALUE ZEROS.
+       01 W-MARCA     PIC X(35) VALUE SPACES.
        01 OCW03803     PIC X(12) VALUE SPACES.
        01 OCW03810     PIC 9(15) VALUE ZEROS.
        01 W-EMPRESA    PIC X(20) VALUE "FATEC ZL".
@@ -84,11 +83,11 @@
       * REPORT SECTION *
       ******************
       *
-       01 DET2.
+       01 DETAILS.
           03 FILLER    PIC X(16) VALUE SPACES.
-          03 DET21     PIC 9(03) VALUE ZEROS.
+          03 DETAILS1  PIC 9(04) VALUE ZEROS.
           03 FILLER    PIC X(04) VALUE SPACES.
-          03 DET22     PIC X(40) VALUE SPACES.
+          03 DETAILS2  PIC X(20) VALUE SPACES.
       *
       ******************
       * ROTINA DE TELA *
@@ -102,17 +101,17 @@
            05  LINE 01  COLUMN 41
                VALUE  "ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»".
            05  LINE 02  COLUMN 01
-               VALUE  "º                      *** CONSULTA DE C".
+               VALUE  "º                      *** CONSULTA DE B".
            05  LINE 02  COLUMN 41
-               VALUE  "ENTROS DE CUSTOS ***                   º".
+               VALUE  "ICICLETAS ***                          º".
            05  LINE 03  COLUMN 01
                VALUE  "ÇÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ".
            05  LINE 03  COLUMN 41
                VALUE  "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¶".
            05  LINE 04  COLUMN 01
-               VALUE  "º              CODIGO                 DE".
+               VALUE  "º              NUMERO                 MA".
            05  LINE 04  COLUMN 41
-               VALUE  "NOMINACAO                              º".
+               VALUE  "RCA                                    º".
            05  LINE 05  COLUMN 01
                VALUE  "º              ------   ----------------".
            05  LINE 05  COLUMN 41
@@ -201,13 +200,12 @@
                LINE 02  COLUMN 69  PIC XX/XX/XX
                USING  DATA-EQ
                HIGHLIGHT.
-       01 OCT038T.
-           05  OCT03801
-               LINE 06  COLUMN 18  PIC 9(03)
-               USING  OCW03801.
-           05  OCT03802
-               LINE 06  COLUMN 25  PIC X(40)
-               USING  OCW03802.
+           05  T-NUMERO
+               LINE 06  COLUMN 18  PIC 9(04)
+               USING NUMERO.
+           05  T-MARCA
+               LINE 06  COLUMN 25  PIC X(20)
+               USING MARCA.
       *-----------------------------------------------------------------
        PROCEDURE DIVISION.
        INICIO.
@@ -219,14 +217,14 @@
            PERFORM INVNOR.
            MOVE DATA-N TO DATA-EQ.
        INC-OP1.
-           OPEN I-O   OCA001
+           OPEN I-O   ARQBIKE
            IF ST-ERRO NOT = "00"
               IF ST-ERRO = "30"
-                 MOVE "ARQUIVO DE CENTROS DE CUSTOS NAO EXISTE" TO MENS
+                 MOVE "ARQUIVO DE BIKE NAO EXISTE" TO MENS
                  PERFORM ROT-MENS THRU ROT-MENS-FIM
                  GO TO ROT-FIM2
               ELSE
-                 MOVE "ERRO NA ABERTURA DO ARQUIVO  " TO MENS
+                 MOVE "** ERRO NA ABERTURA DO ARQBIKE **" TO MENS
                  PERFORM ROT-MENS THRU ROT-MENS-FIM
                  GO TO ROT-FIM2
            ELSE
@@ -240,7 +238,7 @@
            ACCEPT OCT03801
            ACCEPT W-ACT FROM ESCAPE KEY
            IF W-ACT = 02
-                      CLOSE OCA001
+                      CLOSE ARQBIKE
                       GO TO ROT-FIM.
            IF W-ACT = 03
                       GO TO INC-001B.
@@ -248,8 +246,8 @@
                       MOVE "*** FUNCAO NAO DEFINIDA ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO INC-001A.
-           MOVE OCW03801 TO OCC00101
-           START OCA001 KEY IS NOT LESS OCK00101 INVALID KEY
+           MOVE W-NUMERO TO OCC00101
+           START ARQBIKE KEY IS NOT LESS OCK00101 INVALID KEY
                  MOVE "*** FIM DE PROCESSAMENTO ***" TO MENS
                  PERFORM ROT-MENS THRU ROT-MENS-FIM
                  GO TO INC-001.
@@ -260,7 +258,7 @@
            ACCEPT OCT03802
            ACCEPT W-ACT FROM ESCAPE KEY
            IF W-ACT = 02
-                      CLOSE OCA001
+                      CLOSE ARQBIKE
                       GO TO ROT-FIM.
            IF W-ACT = 03
                       GO TO INC-001A.
@@ -268,14 +266,14 @@
                       MOVE "*** FUNCAO NAO DEFINIDA ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO INC-001A.
-           MOVE OCW03802 TO OCC00102
-           START OCA001 KEY IS NOT LESS OCK00102 INVALID KEY
+           MOVE W-MARCA TO OCC00102
+           START ARQBIKE KEY IS NOT LESS OCK00102 INVALID KEY
                  MOVE "*** FIM DE PROCESSAMENTO ***" TO MENS
                  PERFORM ROT-MENS THRU ROT-MENS-FIM
                  GO TO INC-001B.
        INC-RD2.
            DISPLAY (23, 13) LIMPA
-           READ OCA001 NEXT
+           READ ARQBIKE NEXT
            IF ST-ERRO NOT = "00"
               IF ST-ERRO = "10"
                  MOVE "*** FIM DE PROCESSAMENTO ***" TO MENS
@@ -288,10 +286,10 @@
            ELSE
               NEXT SENTENCE.
        ROT-MONTAR.
-           MOVE OCC00101 TO DET21
-           MOVE OCC00102 TO DET22
+           MOVE OCC00101 TO DETAILS1
+           MOVE OCC00102 TO DETAILS2
            COMPUTE LIN = CONLIN + 5
-           DISPLAY (LIN, 02) DET2
+           DISPLAY (LIN, 02) DETAILS
            ADD 1 TO CONLIN
            IF CONLIN < 17
                   GO TO INC-RD2.
@@ -317,8 +315,8 @@
            ACCEPT  (23, 34) W-OPCAO WITH UPDATE
            IF W-OPCAO = "S"
                   MOVE 01 TO CONLIN
-                  MOVE ZEROS  TO OCW03801
-                  MOVE SPACES TO OCW03802
+                  MOVE ZEROS  TO W-NUMERO
+                  MOVE SPACES TO W-MARCA
                   GO TO INC-001.
            IF W-OPCAO NOT = "N"
                   MOVE "*** DIGITE S=SIM   N=NAO ***" TO MENS
@@ -331,7 +329,7 @@
       *
        ROT-FIM.
            DISPLAY (01 01) ERASE.
-           CLOSE OCA001.
+           CLOSE ARQBIKE.
        ROT-FIM2.
            EXIT PROGRAM.
        ROT-FIM3.
