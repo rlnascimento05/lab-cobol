@@ -85,16 +85,16 @@
       *
        01 DETAILS.
           03 FILLER    PIC X(16) VALUE SPACES.
-          03 DETAILS1  PIC 9(04) VALUE ZEROS.
+          03 DETNUMERO  PIC 9(04) VALUE ZEROS.
           03 FILLER    PIC X(04) VALUE SPACES.
-          03 DETAILS2  PIC X(20) VALUE SPACES.
+          03 DETMARCA  PIC X(20) VALUE SPACES.
       *
       ******************
       * ROTINA DE TELA *
       ******************
       *
        SCREEN SECTION.
-       01  OCT038.
+       01  TELABIKE.
            05  BLANK SCREEN.
            05  LINE 01  COLUMN 01
                VALUE  "ษอออออออออออออออออออออออออออออออออออออออ".
@@ -230,47 +230,46 @@
            ELSE
                NEXT SENTENCE.
       *
-       INC-001.
-           DISPLAY  OCT038.
-       INC-001A.
+       SHOW-TELABIKE.
+           DISPLAY TELABIKE.
+       BIKE-OP-1.
            DISPLAY (23, 13)
-            "SOLIC.=> F1=ENCERRA CONSULTA   F2=CONSULTA P/DENOMIN."
-           ACCEPT OCT03801
+            "SOLIC.=> F1=ENCERRA CONSULTA   F2=CONSULTA P/MARCA."
+           ACCEPT T-NUMERO
            ACCEPT W-ACT FROM ESCAPE KEY
            IF W-ACT = 02
                       CLOSE ARQBIKE
                       GO TO ROT-FIM.
            IF W-ACT = 03
-                      GO TO INC-001B.
+                      GO TO BIKE-OP-2.
            IF W-ACT > 03
                       MOVE "*** FUNCAO NAO DEFINIDA ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
-                      GO TO INC-001A.
-           MOVE W-NUMERO TO OCC00101
-           START ARQBIKE KEY IS NOT LESS OCK00101 INVALID KEY
+                      GO TO BIKE-OP-1.
+      *  
+           START ARQBIKE KEY IS NOT LESS NUMERO INVALID KEY
                  MOVE "*** FIM DE PROCESSAMENTO ***" TO MENS
                  PERFORM ROT-MENS THRU ROT-MENS-FIM
-                 GO TO INC-001.
+                 GO TO SHOW-TELABIKE.
            GO TO INC-RD2.
-       INC-001B.
+       BIKE-OP-2.
            DISPLAY (23, 13)
             "SOLIC.=> F1=ENCERRA CONSULTA     F2=CONSULTA P/CODIGO "
-           ACCEPT OCT03802
+           ACCEPT TELABIKE02
            ACCEPT W-ACT FROM ESCAPE KEY
            IF W-ACT = 02
                       CLOSE ARQBIKE
                       GO TO ROT-FIM.
            IF W-ACT = 03
-                      GO TO INC-001A.
+                      GO TO BIKE-OP-1.
            IF W-ACT > 03
                       MOVE "*** FUNCAO NAO DEFINIDA ***" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
-                      GO TO INC-001A.
-           MOVE W-MARCA TO OCC00102
-           START ARQBIKE KEY IS NOT LESS OCK00102 INVALID KEY
+                      GO TO BIKE-OP-1.
+           START ARQBIKE KEY IS NOT LESS MARCA INVALID KEY
                  MOVE "*** FIM DE PROCESSAMENTO ***" TO MENS
                  PERFORM ROT-MENS THRU ROT-MENS-FIM
-                 GO TO INC-001B.
+                 GO TO BIKE-OP-2.
        INC-RD2.
            DISPLAY (23, 13) LIMPA
            READ ARQBIKE NEXT
@@ -286,11 +285,17 @@
            ELSE
               NEXT SENTENCE.
        ROT-MONTAR.
-           MOVE OCC00101 TO DETAILS1
-           MOVE OCC00102 TO DETAILS2
+           MOVE NUMERO TO DETNUMERO
+           MOVE MARCA TO DETMARCA
+      * esse '5' ้ a quantidade de linhas no cabe็alho da tela
+      * TODO: Mudar esse numero 5 para uma variavel global no
+      * workstorage section
            COMPUTE LIN = CONLIN + 5
            DISPLAY (LIN, 02) DETAILS
            ADD 1 TO CONLIN
+      * esse 17 sใo quantas linhas de detalhes eu consigo mostrar na 
+      * minha tela, quantas linhas tem em cada pagina็ใo.
+      * TODO: Tambem deveria virar uma variavel global
            IF CONLIN < 17
                   GO TO INC-RD2.
       *
@@ -300,14 +305,14 @@
            ACCEPT  (23, 38) W-OPCAO  WITH UPDATE
            IF W-OPCAO = "S"
                   MOVE 01 TO CONLIN
-                  DISPLAY OCT038
+                  DISPLAY TELABIKE
                   GO TO INC-RD2.
            IF W-OPCAO NOT = "N"
                   MOVE "*** DIGITE S=SIM   N=NAO ***" TO MENS
                   PERFORM ROT-MENS THRU ROT-MENS-FIM
                   GO TO ROT-SOL.
            MOVE 01 TO CONLIN.
-           GO TO INC-001.
+           GO TO SHOW-TELABIKE.
       *
        NOV-SOL.
            DISPLAY (23, 13) " *** NOVA CONSULTA : . ***"
@@ -315,9 +320,9 @@
            ACCEPT  (23, 34) W-OPCAO WITH UPDATE
            IF W-OPCAO = "S"
                   MOVE 01 TO CONLIN
-                  MOVE ZEROS  TO W-NUMERO
-                  MOVE SPACES TO W-MARCA
-                  GO TO INC-001.
+                  MOVE ZEROS  TO NUMERO
+                  MOVE SPACES TO MARCA
+                  GO TO SHOW-TELABIKE.
            IF W-OPCAO NOT = "N"
                   MOVE "*** DIGITE S=SIM   N=NAO ***" TO MENS
                   PERFORM ROT-MENS THRU ROT-MENS-FIM
@@ -408,4 +413,4 @@
                     GO TO VALDATA-FIM.
        VALDATA-FIM.
       *
-      *---------------------*** FIM DE PROGRAMA ***--------------------*
+      *---------------------*** FIM DE PROGRAMA ***--------------------*
