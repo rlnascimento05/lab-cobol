@@ -231,6 +231,8 @@
                NEXT SENTENCE.
       *
        SHOW-TELABIKE.
+           MOVE ZEROES TO NUMERO
+           MOVE SPACES TO MARCA
            DISPLAY TELABIKE.
        BIKE-OP-1.
            DISPLAY (23, 13)
