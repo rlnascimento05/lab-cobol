@@ -257,7 +257,7 @@
        BIKE-OP-2.
            DISPLAY (23, 13)
             "SOLIC.=> F1=ENCERRA CONSULTA     F2=CONSULTA P/CODIGO "
-           ACCEPT TELABIKE02
+           ACCEPT T-MARCA
            ACCEPT W-ACT FROM ESCAPE KEY
            IF W-ACT = 02
                       CLOSE ARQBIKE
