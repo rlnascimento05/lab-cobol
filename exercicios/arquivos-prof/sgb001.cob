@@ -294,6 +294,7 @@
       **********************
       *
        ROT-FIM.
+                CLOSE CEPS
                 DISPLAY (01, 01) ERASE
                 EXIT PROGRAM.
        ROT-FIMP.

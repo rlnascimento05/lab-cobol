@@ -40,6 +40,8 @@
                 03 BAIRRO               PIC X(20).
                 03 CIDADE               PIC X(20).
                 03 UF                   PIC X(02).
+                03 LATITUDE             PIC X(20).
+                03 LONGITUDE            PIC X(20).
 
        FD CLIENTES
                LABEL RECORD IS STANDARD
@@ -167,10 +169,6 @@
                LINE 12  COLUMN 13  PIC X(01)
                USING  SITUACAO
                HIGHLIGHT.
-      *05  TSITDESC
-      *        LINE 12  COLUMN 15  PIC X(10)
-      *        USING  SITDESC
-      *         HIGHLIGHT.
            05  TMENS
                LINE 19  COLUMN 25  PIC X(50)
                USING  MENS.
@@ -191,19 +189,34 @@
                       CLOSE CLIENTES
                       MOVE "* CRIANDO ARQUIVO CLIENTES *" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
+                      MOVE ST-ERRO  TO MENS
+                      PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO OPEN-CLI
                    ELSE
-                      MOVE "ERRO NA ABERTURA DO ARQUIVO " TO MENS
+                      MOVE "ERRO NO ARQUIVO - CEPS" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
                 ELSE
                     NEXT SENTENCE.
        OPEN-CEP.
+           MOVE "CONECTANDO COM O ARQUIVO DE CEPS" TO MENS
+           PERFORM ROT-MENS THRU ROT-MENS-FIM
            OPEN I-O CEPS
            IF ST-ERRO NOT = "00"
-              MOVE "ERRO NA ABERTURA DO ARQUIVO " TO MENS
-              PERFORM ROT-MENS THRU ROT-MENS-FIM
-              GO TO ROT-FIM.
+               IF ST-ERRO = "30"
+                      OPEN OUTPUT CEPS
+                      CLOSE CEPS
+                      MOVE "* CRIANDO ARQUIVO CEPS *" TO MENS
+                      PERFORM ROT-MENS THRU ROT-MENS-FIM
+                      GO TO OPEN-CEP
+                   ELSE
+                      MOVE "ERRO NO ARQUIVO - CEPS" TO MENS
+                      PERFORM ROT-MENS THRU ROT-MENS-FIM
+                      MOVE ST-ERRO  TO MENS
+                      PERFORM ROT-MENS THRU ROT-MENS-FIM
+                      GO TO ROT-FIM
+               PERFORM ROT-MENS THRU ROT-MENS-FIM
+               GO TO ROT-FIM.
 
        CLEAR-SCREEN.
                 MOVE ZEROS  TO CPF DIA MES ANO RG CLICEP ENDNUM CEP
@@ -279,6 +292,8 @@
                       MOVE "ERRO NA LEITURA DO CEP"   TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       MOVE ST-ERRO  TO MENS
+                      PERFORM ROT-MENS THRU ROT-MENS-FIM
+                      MOVE CEP  TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
                 ELSE
@@ -441,6 +456,9 @@
                 ADD 1 TO W-CONT
                 IF W-CONT < 1500
                         GO TO ROT-MENS2.
+       ROT-MENS-CLEAR.
+           MOVE SPACES TO MENS
+           DISPLAY TMENS.
        ROT-MENS-FIM.
                 EXIT.
        ROT-ALFA-FIM.
