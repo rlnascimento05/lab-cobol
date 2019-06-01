@@ -1,6 +1,6 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SGB-002 SISTEMA GERENCIADOR DE BICICLETAS.
-       AUTHOR. FELIPE VENANCIO DE SENA.
+       PROGRAM-ID. SGB-003 SISTEMA GERENCIADOR DE BICICLETAS.
+       AUTHOR. Ricardo de lucas do nascimento.
       **************************************
       * CADASTRO DE BIKES                  *
       **************************************
@@ -152,7 +152,7 @@
        PROCEDURE DIVISION.
        INICIO.
       *
-       INC-OP0.
+       INITIALIZE.
            OPEN I-O ARQBIKE
            IF ST-ERRO NOT = "00"
                IF ST-ERRO = "30"
@@ -160,21 +160,21 @@
                       CLOSE ARQBIKE
                       MOVE "* ARQUIVO BIKE SENDO CRIADO *" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
-                      GO TO INC-OP0
+                      GO TO INITIALIZE
                ELSE
                       MOVE "ERRO NA ABERTURA DO ARQUIVO BIKE" TO MENS
                       PERFORM ROT-MENS THRU ROT-MENS-FIM
                       GO TO ROT-FIM
            ELSE
                     NEXT SENTENCE.
-       INC-001.
+       SHOW-BIKE.
                 MOVE SPACES TO MARCA MODELO CATEGORIA SITUACAO.
                 MOVE SPACES TO CORDESCRICAO SITUACAODESCRICAO.
                 MOVE ZEROS  TO NUMERO ARO COR VALORCOMPRA VALORLOCACAO.
                 MOVE ZEROS  TO DATACOMPRA DATAUTILIZACAO.
                 DISPLAY TELABIKE.
-                GO TO INC-002.
-       INC-002.
+                GO TO READ-NUMERO.
+       READ-NUMERO.
                 ACCEPT TNUMERO
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT = 02
@@ -183,7 +183,7 @@
                 IF NUMERO = ZEROS
                    MOVE "*** NUMERO INVALIDO ***" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-002.
+                   GO TO READ-NUMERO.
        READ-REG.
                 MOVE 0 TO W-SEL
                 READ ARQBIKE
@@ -193,191 +193,191 @@
                         MOVE "BIKE EXISTENTE" TO MENS
                         PERFORM ROT-MENS THRU ROT-MENS-FIM
                         MOVE 1 TO W-SEL
-                        GO TO CRUD-001
+                        GO TO REG-OPTIONS
                     ELSE
                         MOVE "ERRO NA LEITURA DO REGISTRO" TO MENS
                         PERFORM ROT-MENS THRU ROT-MENS-FIM
                         GO TO ROT-FIM
                 ELSE
                     NEXT SENTENCE.
-       INC-003.
+       READ-MARCA.
                 ACCEPT TMARCA
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-002.
+                IF W-ACT = 02 GO TO READ-NUMERO.
                 IF MARCA = SPACES 
                    MOVE "MARCA DEVE SER DIFERENTE BRANCOS" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-003.
-       INC-004.
+                   GO TO READ-MARCA.
+       READ-MODELO.
                 ACCEPT TMODELO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-003.
+                IF W-ACT = 02 GO TO READ-MARCA.
                 IF MODELO = SPACES 
                    MOVE "MODELO DEVE SER DIFERENTE DE BRANCOS" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-004.
-       INC-005.
+                   GO TO READ-MODELO.
+       READ-CATEGORIA.
                 ACCEPT TCATEGORIA
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-004.
+                IF W-ACT = 02 GO TO READ-MODELO.
                 IF CATEGORIA = SPACES 
                    MOVE "CATEGORIA DEVE SER DIF DE BRANCOS" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-005.
-       INC-006.
+                   GO TO READ-CATEGORIA.
+       READ-ARO.
                 ACCEPT TARO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-005.
+                IF W-ACT = 02 GO TO READ-CATEGORIA.
                 IF ARO = ZEROS 
                    MOVE "ARO DEVE SER DIFERENTE DE ZEROS" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-006.
-       INC-007.
+                   GO TO READ-ARO.
+       READ-COR.
                 ACCEPT TCOR
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-006.
+                IF W-ACT = 02 GO TO READ-ARO.
                 IF COR = 0 OR COR > 9
                     MOVE "COR INVÁLIDA" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO INC-006.
+                    GO TO READ-ARO.
                 MOVE TBCOR(COR) TO ALFACOR
                 DISPLAY CORDESCRICAO ALFACOR.
-       INC-008.
+       READ-VAL-COMPRA.
                 ACCEPT TVALORCOMPRA
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-007.
+                IF W-ACT = 02 GO TO READ-COR.
                 IF VALORCOMPRA = ZEROS 
                    MOVE "VL DE COMPRA DEVE SER DIF DE ZERO" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-008.
-       INC-009.
+                   GO TO READ-VAL-COMPRA.
+       READ-VAL-LOC.
                 ACCEPT TVALORLOCACAO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-008.
+                IF W-ACT = 02 GO TO READ-VAL-COMPRA.
                 IF VALORLOCACAO = ZEROS 
                    MOVE "VL DE LOCACAO DEVE SER DIF DE ZERO" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-009.
-       INC-010.
+                   GO TO READ-VAL-LOC.
+       READ-DATA-COMPR.
                 ACCEPT TDATACOMPRA
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-009.
+                IF W-ACT = 02 GO TO READ-VAL-LOC.
                 IF DATACOMPRA = ZEROS 
                    MOVE "DT DE COMPRA DEVE SER DIF DE ZERO" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-010.
-       INC-011.
+                   GO TO READ-DATA-COMPR.
+       READ-DATA-UTI.
                 ACCEPT TDATAUTILIZACAO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-010.
+                IF W-ACT = 02 GO TO READ-DATA-COMPR.
                 IF DATAUTILIZACAO = ZEROS 
                    MOVE "DT DE UTIL. DEVE SER DIF DE ZERO" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-011.
-       INC-012.
+                   GO TO READ-DATA-UTI.
+       READ-DATA-SIT.
                 ACCEPT TSITUACAO
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-011.
+                IF W-ACT = 02 GO TO READ-DATA-UTI.
                 IF SITUACAO = SPACES 
                    MOVE "SITUACAO DEVE SER DIFERENTE DE BRANCOS" TO MENS
                    PERFORM ROT-MENS THRU ROT-MENS-FIM
-                   GO TO INC-012.
+                   GO TO READ-DATA-SIT.
                 MOVE 0 TO IND.
-       INC-012A.
+       READ-DATA-SITA.
                 MOVE TSIT(IND) TO ALFASIT
                 IF ALFASIT1 NOT = SITUACAO
                    ADD 1 TO IND
                    IF IND > 6
                        MOVE "*** SITUACAO INVALIDA ***" TO MENS
                        PERFORM ROT-MENS THRU ROT-MENS-FIM
-                       GO TO INC-012
+                       GO TO READ-DATA-SIT
                    ELSE
-                       GO TO INC-012A
+                       GO TO READ-DATA-SITA
                 ELSE
                    MOVE ALFASIT2 TO SITUACAODESCRICAO
                    DISPLAY TSITUACAODESCRICAO.
-       INC-OPC.
+       SAVE-CONFIRMATION.
                 MOVE "S" TO W-OPCAO.
                 DISPLAY(23, 40) "DADOS OK? (S / N):".
                 ACCEPT(23, 57) W-OPCAO WITH UPDATE
                 ACCEPT W-ACT FROM ESCAPE KEY
-                IF W-ACT = 02 GO TO INC-002.
+                IF W-ACT = 02 GO TO READ-NUMERO.
                 IF W-OPCAO = "N" OR "n"
                     MOVE "GRAVACAO CANCELADA PELO USUARIO" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO INC-002.
+                    GO TO READ-NUMERO.
                 IF W-OPCAO NOT = "S" AND "s"
                     MOVE "OPCAO INVALIDA. DIGITE S OU N" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO INC-OPC.
+                    GO TO SAVE-CONFIRMATION.
                 IF W-SEL = 03
-                    GO TO ALT-OPC.
-       INC-GRAVACAO.
+                    GO TO ALTER-OPTION.
+       WRITE-BIKE.
                 WRITE REGBIKE
                 IF ST-ERRO = "00" OR "02"
                     MOVE "REGISTRO GRAVADO COM SUCESSO" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO INC-001.
+                    GO TO SHOW-BIKE.
                 IF ST-ERRO = "22"
                     MOVE "REGISTRO DE RA EXISTENTE" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO INC-001
+                    GO TO SHOW-BIKE
                 ELSE
                     MOVE "ERRO AO GRAVAR O REGISTRO" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
                     GO TO ROT-FIM.
-       CRUD-001.
+       REG-OPTIONS.
                 DISPLAY(25, 10)
                  "F1 - NOVO REGISTRO   F2 - ALTERAR   F3 - EXCLUIR"
                 ACCEPT (25, 58) W-OPCAO
                 ACCEPT W-ACT FROM ESCAPE KEY
                 IF W-ACT NOT = 02 AND W-ACT NOT = 03 AND W-ACT NOT = 04
-                    GO TO CRUD-001.
+                    GO TO REG-OPTIONS.
                 MOVE SPACES TO MENS
                 DISPLAY (25, 10) MENS
                 IF W-ACT = 02
                     MOVE 02 TO W-SEL
-                    GO TO INC-001.
+                    GO TO SHOW-BIKE.
                 IF W-ACT = 03
                     MOVE 03 TO W-SEL
-                    GO TO INC-003.
-       EXC-OPC.
+                    GO TO READ-MARCA.
+       EXCLUDE-OPTION.
                 DISPLAY(25, 10) "EXCLUIR? (S / N)".
                 ACCEPT (25, 26) W-OPCAO
                 IF W-OPCAO = "N" OR "n"
                     MOVE "EXCLUSAO CANCELADA PELO USUARIO" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO INC-001.
+                    GO TO SHOW-BIKE.
                 IF W-OPCAO NOT = "S" AND "s"
                     MOVE "OPCAO INVALIDA. DIGITE S OU N" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO EXC-OPC.
-       EXC-PROC.
+                    GO TO EXCLUDE-OPTION.
+       EXCLUDE-BIKE.
                 DELETE ARQBIKE RECORD.
                 IF ST-ERRO = "00"
                     MOVE "REGISTRO EXCLUIDO COM SUCESSO" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO INC-001.
+                    GO TO SHOW-BIKE.
                 MOVE "ERRO NA EXCLUSAO DO REGISTRO" TO MENS
                 PERFORM ROT-MENS THRU ROT-MENS-FIM
                 GO TO ROT-FIM.
-       ALT-OPC.
+       ALTER-OPTION.
                 DISPLAY(25, 10) "ALTERAR? (S / N)".
                 ACCEPT(25, 26) W-OPCAO
                 IF W-OPCAO = "N" OR "n"
                     MOVE "ALTERACAO CANCELADA PELO USUARIO" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO INC-001.
+                    GO TO SHOW-BIKE.
                 IF W-OPCAO NOT = "S" AND "s"
                     MOVE "OPCAO INVALIDA. DIGITE S OU N" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO ALT-OPC.
-       ALT-PROC.
+                    GO TO ALTER-OPTION.
+       ALTER-BIKE.
                 REWRITE REGBIKE.
                 IF ST-ERRO = "00" OR "02"
                     MOVE "REGISTRO ALTERADO COM SUCESSO" TO MENS
                     PERFORM ROT-MENS THRU ROT-MENS-FIM
-                    GO TO INC-001.
+                    GO TO SHOW-BIKE.
                 MOVE "ERRO NA ALTERAÇÃO DO REGISTRO" TO MENS
                 PERFORM ROT-MENS THRU ROT-MENS-FIM
                 GO TO ROT-FIM.
@@ -387,6 +387,7 @@
       **********************
       *
        ROT-FIM.
+                CLOSE ARQBIKE
                 EXIT PROGRAM.
        ROT-FIMP.
                 EXIT PROGRAM.
